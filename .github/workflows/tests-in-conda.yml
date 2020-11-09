@@ -28,7 +28,9 @@ jobs:
             conda init
             conda env update --name test --file tests/environment.yml
             conda activate test
-            python -m unittest discover
+            conda install coverage
+            pip install -e .
+            coverage run tests/tests_pyfoomb.py && coverage report -m && coverage xml
 
         - name: Test with unittest on Ubuntu
           if: matrix.os == 'ubuntu-latest' 
