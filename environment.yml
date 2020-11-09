@@ -1,0 +1,21 @@
+name: pyfoomb
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python>=3.7
+  - numpy
+  - scipy
+  - joblib
+  - pandas>=0.24
+  - xlrd
+  - openpyxl
+  - matplotlib
+  - seaborn
+  - jupyter
+  - psutil
+  - pip
+  - assimulo
+  - pygmo>=2.14
