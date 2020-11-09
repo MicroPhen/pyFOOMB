@@ -9,6 +9,8 @@ Intented application is the acessible modelling of simple to medium complex biop
 
 `pyFOOMB` relies on the `assimulo` package (<https://jmodelica.org/assimulo>), providing an interface to the SUNDIALS CVode integrator for systems of differential equations, as well as event handling routines. For optimization, i.e. model calibration from data, the `pygmo` package is used, which provides Python bindings for the `pagmo2` package implementing the Asynchronous Generalized Islands Model.
 
+To faciliate rapid starting for new users, a continously growing collection of Jupyter notebooks is provided. These serve to demonstrate basic and advanced concepts and functionalities (also beyond the pure functions of the `pyFOOMB` package). Also, the examples can be used as building blocks for developing own bioprocess models and corresponding workflows. 
+
 Literature:
 
 * Andersson C, Führer C, and Akesson J (2015). Assimulo: A unified framework for ODE solvers. _Math Comp Simul_ __116__:26-43
