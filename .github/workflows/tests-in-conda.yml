@@ -1,0 +1,43 @@
+name: Testing in conda env
+
+on: [push]
+
+jobs:
+    test-unittest:
+      name: Test (${{ matrix.python-version }}, ${{ matrix.os }})
+      runs-on: ${{ matrix.os }}
+      strategy:
+        max-parallel: 5
+        matrix:
+            os: [windows-latest, ubuntu-latest]
+            python-version: [3.7, 3.8]
+
+      steps:
+        - uses: actions/checkout@v2
+        - uses: conda-incubator/setup-miniconda@v1.7.0
+          with:
+            miniconda-version: "latest"
+            python-version: ${{ matrix.python-version }}
+            auto-activate-base: true
+            add-pip-as-python-dependency: true
+
+        - name: Test with unittest on Windows
+          if: matrix.os == 'windows-latest'
+          shell: powershell
+          run: |
+            conda init
+            conda env update --name test --file tests/environment.yml
+            conda activate test
+            python -m unittest discover
+
+        - name: Test with unittest on Ubuntu
+          if: matrix.os == 'ubuntu-latest' 
+          shell: bash -l {0}
+          run: |
+            conda init
+            conda env update --name test --file tests/environment.yml
+            conda activate test
+            conda install coverage
+            pip install -e .
+            coverage run tests/tests.py && coverage report -m && coverage xml
+
