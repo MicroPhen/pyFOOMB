@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/MicroPhen/pyFOOMB/branch/main/graph/badge.svg?token=Z3AXJT1F9O)](https://codecov.io/gh/MicroPhen/pyFOOMB)
+
 # pyFOOMB
 
 __*Py*thon *F*ramework for *O*bject *O*riented *M*odelling of *B*ioprocesses__
