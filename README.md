@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/MicroPhen/pyFOOMB/branch/main/graph/badge.svg?token=Z3AXJT1F9O)](https://codecov.io/gh/MicroPhen/pyFOOMB)
+[![codecov](https://codecov.io/gh/MicroPhen/pyFOOMB/branch/main/graph/badge.svg?token=7WALTIPP6O)](https://codecov.io/gh/MicroPhen/pyFOOMB)
 
 # pyFOOMB
 
