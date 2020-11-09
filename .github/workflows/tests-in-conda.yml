@@ -39,5 +39,5 @@ jobs:
             conda activate test
             conda install coverage
             pip install -e .
-            coverage run tests/tests.py && coverage report -m && coverage xml
+            coverage run tests/tests_pyfoomb.py && coverage report -m && coverage xml
 
