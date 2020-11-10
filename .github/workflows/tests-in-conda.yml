@@ -14,7 +14,7 @@ jobs:
 
       steps:
         - uses: actions/checkout@v2
-        - uses: conda-incubator/setup-miniconda@v1.7.0
+        - uses: conda-incubator/setup-miniconda@v2.0.0
           with:
             miniconda-version: "latest"
             python-version: ${{ matrix.python-version }}
