@@ -14,6 +14,8 @@ Intented application is the acessible modelling of simple to medium complex biop
 
 To faciliate rapid starting for new users, a continously growing collection of Jupyter notebooks is provided. These serve to demonstrate basic and advanced concepts and functionalities (also beyond the pure functions of the `pyFOOMB` package). Also, the examples can be used as building blocks for developing own bioprocess models and corresponding workflows. 
 
+Check also our [preprint](https://www.biorxiv.org/content/10.1101/2020.11.10.376665v1) at bioRχiv introducing `pyFOOMB` with two more elaborated application examples that reproduce real-world data from literature.
+
 Literature:
 
 * Andersson C, Führer C, and Akesson J (2015). Assimulo: A unified framework for ODE solvers. _Math Comp Simul_ __116__:26-43
