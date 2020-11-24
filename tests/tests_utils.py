@@ -91,7 +91,8 @@ class TestHelpers():
         timeseries_list = [measurements_wo_errors, measurements_w_errors]
         assert isinstance(Helpers.extract_time_series(timeseries_list, replicate_id='1st', name='M1'), TimeSeries)
         # In case not match is found, the method returns None
-        assert Helpers.extract_time_series(timeseries_list, replicate_id='2nd', name='M1', no_extraction_warning=True) is None
+        with pytest.warns(UserWarning):
+            assert Helpers.extract_time_series(timeseries_list, replicate_id='2nd', name='M1', no_extraction_warning=True) is None
         # More than one match is found
         with pytest.raises(ValueError):
              Helpers.extract_time_series(timeseries_list*2, replicate_id='1st', name='M1')

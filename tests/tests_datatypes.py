@@ -260,7 +260,8 @@ class TestMeasurementErrorModels():
         measurement.error_model_parameters = {_p : error_model_parameters[_p]*1.5 for _p in error_model_parameters}
 
         # Incase the error model is applied, a warning can be given for overwriting the error vector
-        measurement.apply_error_model(report_level=1)
+        with pytest.warns(UserWarning):
+            measurement.apply_error_model(report_level=1)
 
         # Setting new parameter values won't work
         with pytest.raises(KeyError):
