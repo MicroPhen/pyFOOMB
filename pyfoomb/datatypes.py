@@ -323,6 +323,8 @@ class Measurement(TimeSeries):
         self.error_distribution = error_distribution
         if distribution_kwargs is None:
             self.distribution_kwargs = {}
+        else:
+            self.distribution_kwargs = distribution_kwargs
         if self.errors is None and self.error_model is not None:
             self.apply_error_model()
         self._is_init = False
