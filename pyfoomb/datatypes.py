@@ -511,7 +511,13 @@ class Measurement(TimeSeries):
 
         _prediction = [
             prediction for prediction in predictions 
-            if (prediction.name == self.name and prediction.replicate_id == self.replicate_id)
+            if (
+                (
+                    prediction.name == self.name and prediction.replicate_id == self.replicate_id
+                ) or (
+                    prediction.name == self.name and (prediction.replicate_id is None and self.replicate_id is None)
+                )
+            )
         ]
 
         if len(_prediction) > 1:
