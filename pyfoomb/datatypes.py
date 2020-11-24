@@ -535,10 +535,10 @@ class Measurement(TimeSeries):
         if prediction_mask.sum() < len(self.timepoints):
             measurement_mask = numpy.isin(self.timepoints, prediction.timepoints)
             y_meas = self.values[measurement_mask]
-            y_meas_err = self.errors[measurement_mask]
+            y_meas_err = self.errors[measurement_mask] if self.errors is not None else None
         else:
             y_meas = self.values
-            y_meas_err = self.errors
+            y_meas_err = self.errors if self.errors is not None else None
 
         if metric in ['negLL', 'negative-log-likelihood']:
             if self.errors is None and isinstance(self.error_distribution, scipy.stats.rv_continuous):
@@ -586,9 +586,10 @@ class Measurement(TimeSeries):
         if self.errors is None:
             raise AttributeError('Property `errors` is None, thus cannot sample random values.')
         # get rvs for masked values
-        _rvs_masked = self.error_distribution.rvs(loc=self.values, scale=self.errors, **distribution_kwargs)
         _rvs_unmasked = numpy.zeros_like(self.joint_mask)*numpy.nan
-        _rvs_unmasked[self.joint_mask] = _rvs_masked
+        # Make sure to get nonnan values only at the maks positions
+        _rvs_masked = self.error_distribution.rvs(loc=self.values, scale=self.errors, **distribution_kwargs)
+        _rvs_unmasked[self.joint_mask] = _rvs_masked 
 
         return _rvs_unmasked
 
