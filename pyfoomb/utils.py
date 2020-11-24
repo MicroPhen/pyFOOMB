@@ -138,7 +138,7 @@ class Helpers():
                 The joint vector of time points.
         """
 
-        t_all = numpy.array(0)
+        t_all = numpy.array([])
         for _time_series in time_series:
             t_all = numpy.append(t_all, _time_series.timepoints)
         return numpy.unique(t_all)
