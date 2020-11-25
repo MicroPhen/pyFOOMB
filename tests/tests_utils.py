@@ -40,7 +40,6 @@ class TestHelpers():
             assert isinstance(_bounds[0], float)
             assert isinstance(_bounds[1], float)
     
-
     @pytest.mark.parametrize(
         'ok_ids',
         [
@@ -57,7 +56,6 @@ class TestHelpers():
         """
         assert Helpers.has_unique_ids(ok_ids) == True
 
-    
     @pytest.mark.parametrize(
         'not_ok_ids',
         [
@@ -71,7 +69,6 @@ class TestHelpers():
         To ensure that ids (replicate_ids, states, etc) are case-insensitive unique
         """
         assert Helpers.has_unique_ids(not_ok_ids) == False
-
 
     def test_utils_for_datatypes(self):
         measurements_wo_errors = Measurement(name='M1', timepoints=[1, 2, 3], values=[10, 20, 30], replicate_id='1st')
@@ -96,7 +93,6 @@ class TestHelpers():
         # More than one match is found
         with pytest.raises(ValueError):
              Helpers.extract_time_series(timeseries_list*2, replicate_id='1st', name='M1')
-
 
     def test_parameter_collections(self):
         """

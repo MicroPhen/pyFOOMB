@@ -311,7 +311,6 @@ class TestMiscellaneous():
     def test_str(self):
         print(StaticDatatypes.timeseries)
 
-
     def test_other_distributions(self):
         
         # Create a Measurement object having an error t-distribution 
