@@ -46,41 +46,36 @@ class TestParameterMapper():
 class TestParameterManager():
 
     replicate_ids = ['1st', '2nd']
-    parameters = {'p1' : 1, 'p2' : 2, 'p3' : 3}
+    parameters = {'p1' : 1, 'p2' : 2}
 
-    def test_init(self):
+    @pytest.fixture()
+    def parameter_manager(self):
+        return ParameterManager(replicate_ids=self.replicate_ids, parameters=self.parameters)
 
-        parameter_manager = ParameterManager(replicate_ids=self.replicate_ids, parameters=self.parameters)
+    @pytest.fixture()
+    def mappings(self):
+        return [
+            ParameterMapper(_replicate_id, _global_parameter)
+            for _replicate_id in self.replicate_ids
+            for _global_parameter in self.parameters
+        ]
 
+    def test_init(self, parameter_manager):
         # Must provide case-senstitive unique replicate_ids
         with pytest.raises(ValueError):
             ParameterManager(replicate_ids=['1st', '1ST'], parameters=self.parameters)
-
         # Can set replicate_ids only during instantiation
         with pytest.raises(AttributeError):
-            parameter_manager.replicate_ids = self.replicate_ids
-
+            parameter_manager.replicate_ids = ['1st', '2nd']
         # Can set global parameters only during instantiation
         with pytest.raises(AttributeError):
             parameter_manager.global_parameters = self.parameters
 
-    def test_parameter_mapping_related_methods(self):
-        parameter_manager = ParameterManager(replicate_ids=self.replicate_ids, parameters=self.parameters)
-
-        # The managed mappings can be shown as DataFrame
-        parameter_manager.parameter_mapping
-
-        # Create a list of parameter mappings to be applied
-        mappings = [
-            ParameterMapper(_replicate_id, _global_parameter)
-            for _replicate_id in self.replicate_ids
-            for _global_parameter in list(self.parameters.keys())[1:]
-        ]
+    def test_apply_parameter_mappings(self, parameter_manager, mappings):
         # Apply a single mapping
         parameter_manager.apply_mappings(mappings[0])
         # Apply a list of mappings
         parameter_manager.apply_mappings(mappings[1:])
-
         # Now set some parameter values, there will be a Warning issued for the unknown parameter
         with pytest.warns(UserWarning):
             parameter_manager.set_parameter_values(
@@ -90,12 +85,6 @@ class TestParameterManager():
                     'p_unknown' : 10, # unknown parameter
                 }
             )
-        # Can get the current parameter mappings as list of ParameterMappers
-        parameter_manager.get_parameter_mappers()
-
-        # Get the current parameter values for a specific replicate_id
-        parameter_manager.get_parameters_for_replicate(replicate_id='1st')
-
         # One can define a local parameter for multiple replicate ids
         parameter_manager.apply_mappings(
             ParameterMapper(replicate_id=['1st', '2nd'], global_name='p1', local_name='p1_local', value=10000),
@@ -104,7 +93,6 @@ class TestParameterManager():
         parameter_manager.apply_mappings(
             ParameterMapper(replicate_id='all', global_name='p1', local_name='p1_local'),
         )
-        
         # Must use only known replicate ids
         with pytest.raises(ValueError):
             parameter_manager.apply_mappings(
@@ -120,6 +108,13 @@ class TestParameterManager():
                 ParameterMapper(replicate_id='1st', global_name='p_unknown'),
             )
 
+    def test_parameter_other_mapping_related_methods(self, parameter_manager):
+        # The managed mappings can be shown as DataFrame
+        parameter_manager.parameter_mapping
+        # Can get the current parameter mappings as list of ParameterMappers
+        parameter_manager.get_parameter_mappers()
+        # Get the current parameter values for a specific replicate_id
+        parameter_manager.get_parameters_for_replicate(replicate_id='1st')
         # There is a private method to check the parameter mappings before applying them
         # Check for being ParameterMapper objects
         with pytest.raises(TypeError):
@@ -132,9 +127,4 @@ class TestParameterManager():
                     ParameterMapper(replicate_id='2nd', global_name='p1', local_name='p1_local', value=1000),
                 ]
             )
-        
-
-
-
-
 
