@@ -89,6 +89,18 @@ class Model06(BioprocessModel):
         return [y0, y1]
 
 
+class Model07(Model02):
+
+    def state_events(self, t, y, sw):
+        event_t = t - 10
+        return [event_t]
+
+    def change_states(self, t, y, sw):
+        if sw[0]:
+            y = y + 10
+        return y
+
+
 class ModelLibrary():
 
     modelnames = [
@@ -98,6 +110,7 @@ class ModelLibrary():
         'model04',
         'model05',
         'model06',
+        'model07',
     ]
 
     modelclasses = {
@@ -107,6 +120,7 @@ class ModelLibrary():
         'model04' : Model04,
         'model05' : Model05,
         'model06' : Model06,
+        'model07' : Model07
     }
 
     states = {
@@ -116,6 +130,7 @@ class ModelLibrary():
         'model04' : ['y0' , 'y1'],
         'model05' : ['yA', 'yB', 'yC', 'yD'],
         'model06' : ['y0' , 'y1'],
+        'model07' : ['y'],
     }
 
     model_parameters = {
@@ -125,6 +140,7 @@ class ModelLibrary():
         'model04' : {'rate0' : 4.0, 'rate1' : 5.0},
         'model05' : {'rateA' : 10.0, 'rateB' : 11.0, 'rateC' : 12.0, 'rateD' : 13.0, 'rateE' : 14.0},
         'model06' : {'rate0' : -2.0, 'rate1' : -3.0},
+        'model07' : {'k' : 0.02},
     }
 
     initial_values = {
@@ -134,6 +150,7 @@ class ModelLibrary():
         'model04' : {'y00' : 4.0, 'y10' : 5.0},
         'model05' : {'yA0' : 100.0, 'yB0' : 200.0, 'yC0' : 300.0, 'yD0': 400.0},
         'model06' : {'y00' : 20.0, 'y10' : 30.0},
+        'model07' : {'y0' : 100.0},
     }
 
     initial_switches = {
@@ -143,6 +160,7 @@ class ModelLibrary():
         'model04' : None,
         'model05' : None,
         'model06' : [False, False, False],
+        'model07' : None,
     }
 
 
