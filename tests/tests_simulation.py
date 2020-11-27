@@ -52,7 +52,7 @@ class TestSimulator():
         with pytest.raises(ValueError):
             Simulator(bioprocess_model_class=modelclass, model_parameters=model_parameters)
         
-    @pytest.mark.parametrize('t', [24, [1, 2, 3]])
+    @pytest.mark.parametrize('t', [24, [0, 1, 2, 3]])
     def test_simulate(self, simulator, t):
         simulator.simulate(t=t)
         # Using unknown parameters has no effect and passes silently
