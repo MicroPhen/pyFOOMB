@@ -70,6 +70,10 @@ class TestHelpers():
         """
         assert Helpers.has_unique_ids(not_ok_ids) == False
 
+    def test_unique_ids_must_be_list_or_dict(self):
+        with pytest.raises(TypeError):
+            Helpers.has_unique_ids(('a01', 'b01'))
+
     def test_utils_for_datatypes(self):
         measurements_wo_errors = Measurement(name='M1', timepoints=[1, 2, 3], values=[10, 20, 30], replicate_id='1st')
         measurements_w_errors = Measurement(name='M2', timepoints=[2, 3, 4], values=[20, 30, 40], errors=[1/20, 1/30, 1/40], replicate_id='1st')
