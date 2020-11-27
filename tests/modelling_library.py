@@ -8,7 +8,7 @@ from pyfoomb import ObservationFunction
 #%% Models that work
 
 class Model01(BioprocessModel):
-    def rhs(self, t, y, sw):
+    def rhs(self, t, y, sw=None):
         y0, y1 = y
         rate0, rate1 = self.model_parameters.to_numpy()
         dy0dt = rate0
@@ -17,7 +17,7 @@ class Model01(BioprocessModel):
 
 
 class Model02(BioprocessModel):
-    def rhs(self, t, y, sw):
+    def rhs(self, t, y, sw=None):
         k = self.model_parameters['k']
         dydt = -k * y
         return dydt
@@ -38,7 +38,7 @@ class Model03(BioprocessModel):
 
 
 class Model04(BioprocessModel):
-    def rhs(self, t, y, sw):
+    def rhs(self, t, y, sw=None):
         y0, y1 = y
         rate0 = self.model_parameters['rate0']
         rate1 = self.model_parameters['rate1']
@@ -48,7 +48,7 @@ class Model04(BioprocessModel):
 
 
 class Model05(BioprocessModel):
-    def rhs(self, t, y):
+    def rhs(self, t, y=None):
         yA, yB, yC, yD = y
         rateA, rateB, rateC, rateD, rateE = self.model_parameters.to_numpy()
         dyAdt = rateA
@@ -134,6 +134,15 @@ class ModelLibrary():
         'model04' : {'y00' : 4.0, 'y10' : 5.0},
         'model05' : {'yA0' : 100.0, 'yB0' : 200.0, 'yC0' : 300.0, 'yD0': 400.0},
         'model06' : {'y00' : 20.0, 'y10' : 30.0},
+    }
+
+    initial_switches = {
+        'model01' : None,
+        'model02' : None,
+        'model03' : [False],
+        'model04' : None,
+        'model05' : None,
+        'model06' : [False, False, False],
     }
 
 
