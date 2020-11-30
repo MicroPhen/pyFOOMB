@@ -1,4 +1,4 @@
-name: Testing in conda env
+name: Tests
 
 on: [push]
 
