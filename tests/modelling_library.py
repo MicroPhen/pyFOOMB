@@ -101,6 +101,244 @@ class Model07(Model02):
         return y
 
 
+# Variants of Model03
+class Model03_V02(Model03):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y1 = y1
+        return np.array([event_y1,])
+
+
+class Model03_V03(Model03):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        return np.array([event_y0, event_y1])     
+    
+
+class Model03_V04(Model03):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        return np.array([event_y0, event_y1,])       
+
+
+class Model03_V05(Model03):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t])     
+    
+
+class Model03_V06(Model03):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])       
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V07(BioprocessModel):
+    def rhs(self, t, y, sw):
+        y0, y1 = y
+        rate0, rate1 = self.model_parameters.to_numpy()
+        if sw[0]:
+            dy0dt = rate1
+        else:
+            dy0dt = rate0
+
+        if sw[1]:
+            dy1dt = rate0
+        else:
+            dy1dt = rate1
+        return np.array([dy0dt, dy1dt])
+
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])   
+
+    def change_states(self, t, y, sw):
+        y0, y1 = y
+        if sw[2]:
+            y0 = self.initial_values['y00']
+            y1 = self.initial_values['y10']
+        return [y0, y1]
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V08(Model03_V07):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0 
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([
+            event_y0, 
+            event_y1, 
+            event_t,
+        ])   
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V09(Model03_V07):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([
+            event_y0, 
+            event_y1, 
+            event_t
+        ])   
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V10(Model03_V07):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([
+            event_y0, event_y1, event_t
+        ])   
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V11(Model03_V07):
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([
+            event_y0, event_y1, event_t,
+        ])   
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V12(Model03):
+    def state_events(self, t, y, sw):
+        event_t = t - 5
+        return np.array([event_t]) 
+
+
+# Autodetection of number of events from return of method `state_events`
+class Model03_V13(Model03):
+    def state_events(self, t, y, sw):
+        event_t = t - 5
+        return np.array([event_t,])
+
+
+# Bad variants of Model03
+
+class Model03_BadV01(BioprocessModel):
+    # state vector is unpacked in the wrong order
+    def rhs(self, t, y):
+        y1, y0 = y
+        rate0, rate1 = self.model_parameters.to_numpy()
+        dy0dt = rate0
+        dy1dt = rate1
+        return np.array([dy0dt, dy1dt])
+
+
+class Model03_BadV02(BioprocessModel):
+    # derivatives of state vector are return in the wrong order
+    def rhs(self, t, y):
+        y0, y1 = y
+        rate0, rate1 = self.model_parameters.to_numpy()
+        dy0dt = rate0
+        dy1dt = rate1
+        return np.array([dy1dt, dy0dt])
+
+
+class Model03_BadV03(BioprocessModel):
+    # state vector is unpacked in the wrong order
+    # derivatives of state vector are return in the wrong order
+    def rhs(self, t, y):
+        y1, y0 = y
+        rate0, rate1 = self.model_parameters.to_numpy()
+        dy0dt = rate0
+        dy1dt = rate1
+        return np.array([dy1dt, dy0dt])
+
+
+class Model03_BadV04(BioprocessModel):
+    # name of parameter variable does not match the corresponding key
+    def rhs(self, t, y):
+        y0, y1 = y
+        rate0 = self.model_parameters['rate0']
+        any_parameter = self.model_parameters['rate1']
+        dy0dt = rate0
+        dy1dt = any_parameter
+        return np.array([dy0dt, dy1dt])
+
+
+class Model03_BadV05(BioprocessModel):
+    # parameters are unpacked in wrong order
+    def rhs(self, t, y):
+        y0, y1 = y
+        rate1, rate0 = self.model_parameters.to_numpy()
+        dy0dt = rate0
+        dy1dt = rate1
+        return np.array([dy0dt, dy1dt])
+
+
+class Model03_BadV06(Model03_V06):
+    # state vector is unpacked in the wrong order
+    def state_events(self, t, y, sw):
+        y1, y0 = y
+        rate0, rate1 = self.model_parameters.to_numpy()
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])       
+
+
+class Model03_BadV07(Model03_V06):
+    # parameters are unpacked in wrong order
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        rate1, rate0 = self.model_parameters.to_numpy()
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])       
+
+
+class Model03_BadV08(Model03_V06):
+    # name of parameter variable does not match the corresponding key
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        rate0 = self.model_parameters['rate0']
+        any_parameter = self.model_parameters['rate1']
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])   
+
+
+class Model03_BadV09(Model03_V06):
+    # name of parameter variable does not match the corresponding key
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        any_parameter = self.model_parameters['rate1']
+        event_y0 = y0
+        event_y1 = y1
+        event_t = t - 5
+        return np.array([event_y0, event_y1, event_t,])
+
+
 class ModelLibrary():
 
     modelnames = [
@@ -162,6 +400,34 @@ class ModelLibrary():
         'model06' : [False, False, False],
         'model07' : None,
     }
+
+    bad_variants_model03 = [
+        Model03_BadV01,
+        Model03_BadV01,
+        Model03_BadV02,
+        Model03_BadV03,
+        Model03_BadV04,
+        Model03_BadV05,
+        Model03_BadV06,
+        Model03_BadV07,
+        Model03_BadV08,
+        Model03_BadV09,
+    ]
+
+    variants_model03 = [
+        Model03_V02,
+        Model03_V03,
+        Model03_V04,
+        Model03_V05,
+        Model03_V06,
+        Model03_V07,
+        Model03_V08,
+        Model03_V09,
+        Model03_V10,
+        Model03_V11,
+        Model03_V12,
+        Model03_V13
+    ]
 
 
 class ObservationFunction01(ObservationFunction):
