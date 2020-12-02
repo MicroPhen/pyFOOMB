@@ -164,7 +164,7 @@ class TestEstimateMethods():
         # Length of bounds must match the length of unknowns
         with pytest.raises(ValueError):
             caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds*2)
-
+        
     def test_estimate_parallel_MC_sampling(self, caretaker_multi):
         caretaker_multi.estimate_parallel_MC_sampling(
             unknowns=self.unknowns, 
@@ -193,11 +193,35 @@ class TestEstimateMethods():
             evolutions=2, 
             optimizers='compass_search',
         )
+        # Some informative print output for many evolutions
+        caretaker_multi.estimate_parallel_MC_sampling(
+            unknowns=self.unknowns, 
+            measurements=self.data_multi, 
+            bounds=self.bounds, 
+            mc_samples=2,
+            rtol_islands=None,
+            report_level=1, 
+            evolutions=121, 
+            optimizers='compass_search',
+        )
+        caretaker_multi.estimate_parallel_MC_sampling(
+            unknowns=self.unknowns, 
+            measurements=self.data_multi, 
+            bounds=self.bounds, 
+            mc_samples=2,
+            rtol_islands=None,
+            report_level=2, 
+            evolutions=121, 
+            optimizers='compass_search',
+        )
         
         # Length of bounds must match the length of unknowns
         with pytest.raises(ValueError):
             caretaker_multi.estimate_parallel_MC_sampling(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds*2, mc_samples=2)
-        
+        # Measurements must be a list of type Measurement
+        with pytest.raises(TypeError):
+            caretaker_multi.estimate_parallel_MC_sampling(unknowns=self.unknowns, measurements=[ModelState(name='y0', timepoints=[1, 2, 3], values=[10, 20 ,30])], bounds=self.bounds)
+
         # for MC sampling, measurements with errors must be used
         with pytest.raises(AttributeError):
             caretaker_multi.estimate_parallel_MC_sampling(
@@ -228,10 +252,10 @@ class TestEstimateMethods():
             bounds=self.bounds, 
             evolutions=2,
             optimizers=['compass_search']*2,
-            rtol_islands=None
+            rtol_islands=None,
+            report_level=4,
         )
         assert empty_est.empty
-        
 
     def test_order_of_bounds(self, caretaker_multi):
         bounds = [(100, 100), (200, 200), (300, 300)] # By choosing the same lower and upper bounds, the estimation output is fixed
@@ -461,7 +485,8 @@ class TestMatrices():
         ]
         estimates = {'y00' : 90}
 
-        caretaker_single.get_parameter_matrices(estimates=estimates, measurements=measurements)
+        matrices = caretaker_single.get_parameter_matrices(estimates=estimates, measurements=measurements)
+        caretaker_single.get_optimality_criteria(Cov=matrices['Cov'], report_level=1)
         caretaker_single.get_information_matrix(estimates=estimates, measurements=measurements)
         caretaker_single.get_parameter_uncertainties(estimates=estimates, measurements=measurements, report_level=1)
         # Only lists of measurements and sensitivites can be used for the respective arguments
