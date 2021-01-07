@@ -14,17 +14,17 @@ Intented application is the acessible modelling of simple to medium complex biop
 
 To faciliate rapid starting for new users, a continously growing collection of Jupyter notebooks is provided. These serve to demonstrate basic and advanced concepts and functionalities (also beyond the pure functions of the `pyFOOMB` package). Also, the examples can be used as building blocks for developing own bioprocess models and corresponding workflows. 
 
-Check also our [preprint](https://www.biorxiv.org/content/10.1101/2020.11.10.376665v1) at bioRχiv introducing `pyFOOMB` with two more elaborated application examples that reproduce real-world data from literature.
+Check also our open access [publication](https://onlinelibrary.wiley.com/doi/full/10.1002/elsc.202000088) at Engineering in Life Sciences introducing `pyFOOMB` with two more elaborated application examples that reproduce real-world data from literature.
 
 Literature:
 
 * Andersson C, Führer C, and Akesson J (2015). Assimulo: A unified framework for ODE solvers. _Math Comp Simul_ __116__:26-43
-* Hindmarsh AC, _et al_ (2005). SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers. _ACM Trans Math Softw_ __31__:363-396
 * Biscani F, Izzo D (2020). A parallel global multiobjective framework for optimization: pagmo. _J Open Source Softw_ __5__:2338
+* Hindmarsh AC, _et al_ (2005). SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers. _ACM Trans Math Softw_ __31__:363-396
 
 ## Requirements (provided as environment.yml)
 
-* python 3.7 or 3.8
+* python 3.7, 3.8 or 3.9
 * numpy
 * scipy
 * joblib
