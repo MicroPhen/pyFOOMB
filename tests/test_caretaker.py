@@ -92,7 +92,6 @@ class TestBaseFunctionalities():
         with pytest.raises(KeyError):
             caretaker02.add_replicate(replicate_id='4th', mappings=[mapping])
 
-
     def test_properties(self, caretaker_multi):
         # Get the current parameter mapping
         caretaker_multi.parameter_mapping
@@ -166,7 +165,7 @@ class TestEstimateMethods():
 
     def test_estimate_parallel(self, caretaker_multi):
         _, est_info = caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds, report_level=5, evolutions=2, optimizers='compass_search')
-        caretaker_multi.estimate_parallel_continued(estimation_result=est_info)
+        caretaker_multi.estimate_parallel_continued(estimation_result=est_info, evolutions=121, report_level=1, rtol_islands=None)
         # As ususal, unknowns must be unique (case-insensitive)
         with pytest.raises(KeyError):
             caretaker_multi.estimate_parallel(unknowns=['y0', 'Y0'], measurements=self.data_multi, bounds=self.bounds*2)
@@ -176,19 +175,19 @@ class TestEstimateMethods():
         # Length of bounds must match the length of unknowns
         with pytest.raises(ValueError):
             caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds*2)
-        
 
     @pytest.mark.parametrize(
         'arguments', 
         [
-            {'evolutions' : 2, },
+            {'evolutions' : 2},
             {'evolutions' : 2, 'reuse_errors_as_weights' : False},
             {'evolutions' : 2, 'jobs_to_save' : 1, 'report_level' : 6},
-            {'evolutions' : 121, 'report_level' : 1},
-            {'evolutions' : 121, 'report_level' : 2},
+            {'evolutions' : 121, 'report_level' : 1, 'rtol_islands' : None},
+            {'evolutions' : 121, 'report_level' : 2, 'rtol_islands' : None},
+            {'evolutions' : 121, 'report_level' : 3, 'rtol_islands' : None},
         ]
     )    
-    def test_estimate_parallel_MC_sampling(self, caretaker_multi, arguments):
+    def test_estimate_parallel_MC_sampling_kwargs(self, caretaker_single, caretaker_multi, arguments):
         caretaker_multi.estimate_parallel_MC_sampling(
             unknowns=self.unknowns, 
             measurements=self.data_multi, 
@@ -197,7 +196,8 @@ class TestEstimateMethods():
             optimizers='compass_search', 
             **arguments,
         )
-        
+
+    def test_estimate_parallel_MC_sampling(self, caretaker_multi):
         # Length of bounds must match the length of unknowns
         with pytest.raises(ValueError):
             caretaker_multi.estimate_parallel_MC_sampling(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds*2, mc_samples=2)
