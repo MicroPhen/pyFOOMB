@@ -164,6 +164,8 @@ class TestEstimateMethods():
             caretaker_single.estimate(unknowns=self.unknowns, measurements=self.data_single, bounds=self.bounds, optimizer_kwargs={'strategy' : 'randtobest1exp'})
 
     def test_estimate_parallel(self, caretaker_multi):
+        caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds, evolutions=2, optimizers='compass_search')
+        
         _, est_info = caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds, report_level=5, evolutions=2, optimizers='compass_search')
         caretaker_multi.estimate_parallel_continued(estimation_result=est_info, evolutions=121, report_level=1, rtol_islands=None)
         # As ususal, unknowns must be unique (case-insensitive)
@@ -371,14 +373,14 @@ class TestSensitivites():
             caretaker_multi.get_sensitivities(tfinal=24, parameters=['some_parameter'])
 
     @pytest.mark.parametrize(
-        'abs_h, rel_h', 
+        'abs_h, rel_h, should_warn', 
         [
-            (1e-3, None),
-            (None, 1e-18),
+            (1e-3, None, False),
+            (None, 1e-18, True),
+            (1e-18, 1e-18, True),
         ],
     )
-    def test_centr_diff(self, caretaker_single, abs_h, rel_h):
-
+    def test_centr_diff(self, caretaker_single, abs_h, rel_h, should_warn):
         arg = (
             None, # replicated_id
             'y0', # response_i
@@ -388,8 +390,11 @@ class TestSensitivites():
             {'y00' : 100, 'y10' : 10}, # parameters
             [1, 2, 3], # t
         )
-        caretaker_single._d_response_i_wrt_d_parameter_j_central_difference(arg)
-
+        if should_warn:
+            with pytest.warns(UserWarning):
+                caretaker_single._d_response_i_wrt_d_parameter_j_central_difference(arg)
+        else:
+            caretaker_single._d_response_i_wrt_d_parameter_j_central_difference(arg)
 
 class TestMatrices():
 
