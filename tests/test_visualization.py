@@ -61,12 +61,12 @@ class TestVisualization():
             caretaker=caretaker_single,
         )
 
-    @pytest.mark.parametrize('measurements', [StaticHelpers.data_single, StaticHelpers.data_multi])
-    def test_compare_estimates_many(self, caretaker_single, measurements):
+    def test_compare_estimates_many(self, caretaker_multi):
         Visualization.compare_estimates_many(
-            parameters={_p : [10]*3 for _p in StaticHelpers.unknowns},
-            measurements=measurements,
-            caretaker=caretaker_single,
+            parameter_collections={_p : [10]*3 for _p in StaticHelpers.unknowns},
+            measurements=StaticHelpers.data_multi,
+            caretaker=caretaker_multi,
+            show_measurements_only=True,
         )
 
     @pytest.mark.parametrize('estimates', [None, {'p1': 2.5, 'p2' : 5.5}])
