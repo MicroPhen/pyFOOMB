@@ -114,13 +114,25 @@ class TestBaseFunctionalities():
         caretaker_single.reset()
         caretaker_multi.reset()
 
+    @pytest.mark.parametrize(
+        'guess_dict', 
+        [
+            {'rate0' : np.inf},
+            {'rate0' : None},
+            {'rate0' : np.inf}
+        ]
+    )
+    def test_loss_function(self, caretaker_single, guess_dict):
+        with pytest.raises(ValueError):
+            caretaker_single.loss_function(
+                guess_dict=guess_dict, 
+                metric='negLL', 
+                measurements=StaticHelpers.data_single,
+            )
+
 
 class TestEstimateMethods():
 
-    # data_single = [Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 20 ,30], errors=[0.1, 0.2, 0.3])]
-    # data_multi = [Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 20 ,30], errors=[0.1, 0.2, 0.3], replicate_id='1st')]
-    # unknowns = ['y00']
-    # bounds = [(-100, 100)]
     data_single = StaticHelpers.data_single
     data_multi = StaticHelpers.data_multi
     unknowns = StaticHelpers.unknowns
