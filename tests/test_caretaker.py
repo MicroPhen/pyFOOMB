@@ -177,54 +177,25 @@ class TestEstimateMethods():
         with pytest.raises(ValueError):
             caretaker_multi.estimate_parallel(unknowns=self.unknowns, measurements=self.data_multi, bounds=self.bounds*2)
         
-    def test_estimate_parallel_MC_sampling(self, caretaker_multi):
+
+    @pytest.mark.parametrize(
+        'arguments', 
+        [
+            {'evolutions' : 2, },
+            {'evolutions' : 2, 'reuse_errors_as_weights' : False},
+            {'evolutions' : 2, 'jobs_to_save' : 1, 'report_level' : 6},
+            {'evolutions' : 121, 'report_level' : 1},
+            {'evolutions' : 121, 'report_level' : 2},
+        ]
+    )    
+    def test_estimate_parallel_MC_sampling(self, caretaker_multi, arguments):
         caretaker_multi.estimate_parallel_MC_sampling(
             unknowns=self.unknowns, 
             measurements=self.data_multi, 
             bounds=self.bounds, 
             mc_samples=2, 
-            evolutions=2, 
-            optimizers='compass_search',
-        )
-        caretaker_multi.estimate_parallel_MC_sampling(
-            unknowns=self.unknowns, 
-            measurements=self.data_multi, 
-            bounds=self.bounds, 
-            mc_samples=2, 
-            evolutions=2, 
-            optimizers='compass_search',
-            reuse_errors_as_weights=False,
-        )
-        caretaker_multi.estimate_parallel_MC_sampling(
-            unknowns=self.unknowns, 
-            measurements=self.data_multi, 
-            bounds=self.bounds, 
-            mc_samples=2, 
-            jobs_to_save=1, 
-            report_level=6, 
-            evolutions=2, 
-            optimizers='compass_search',
-        )
-        # Some informative print output for many evolutions
-        caretaker_multi.estimate_parallel_MC_sampling(
-            unknowns=self.unknowns, 
-            measurements=self.data_multi, 
-            bounds=self.bounds, 
-            mc_samples=2,
-            rtol_islands=None,
-            report_level=1, 
-            evolutions=121, 
-            optimizers='compass_search',
-        )
-        caretaker_multi.estimate_parallel_MC_sampling(
-            unknowns=self.unknowns, 
-            measurements=self.data_multi, 
-            bounds=self.bounds, 
-            mc_samples=2,
-            rtol_islands=None,
-            report_level=2, 
-            evolutions=121, 
-            optimizers='compass_search',
+            optimizers='compass_search', 
+            **arguments,
         )
         
         # Length of bounds must match the length of unknowns
