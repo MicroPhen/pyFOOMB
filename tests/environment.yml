@@ -19,3 +19,5 @@ dependencies:
   - pip
   - assimulo
   - pygmo>=2.14
+  - pytest
+  - pytest-cov

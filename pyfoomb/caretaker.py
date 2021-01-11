@@ -129,7 +129,6 @@ class Caretaker():
             )
             if model_checking_assistance:
                 if not model_checker.check_model_consistency(copy.deepcopy(_simulator)):
-                #if not model_checker.check_model_consistency(_simulator):
                     warnings.warn(f'There might by some issues for {_model_name} with replicate_id {_replicate_id}')
             self.simulators[_replicate_id] = _simulator
 
@@ -2401,7 +2400,7 @@ class Caretaker():
                 All of them, except for certain flags if these are handled.
         """
 
-        if not any(numpy.isfinite(list(guess_dict.values()))) or None in list(guess_dict.values()):
+        if None in list(guess_dict.values()) or not any(numpy.isfinite(list(guess_dict.values()))):
             raise ValueError(f'Some unknowns have invalid values. {guess_dict}')
 
         self.set_parameters(guess_dict)

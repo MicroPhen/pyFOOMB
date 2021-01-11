@@ -22,6 +22,8 @@ setuptools.setup(name = __packagename__,
         description='Package for handling systems of ordinary differential equations (ODEs) with discontinuities. Relies on assimulo package for ODE integration and pygmo package for optimization.',
         author='Johannes Hemmerich',
         author_email='hemmerich@outlook.com',
+        url='https://github.com/MicroPhen/pyFOOMB',
+        license='MIT',
         classifiers= [
             'Programming Language :: Python :: 3 :: Only',
             'Operating System :: OS Independent',
