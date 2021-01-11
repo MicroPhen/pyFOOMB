@@ -68,7 +68,6 @@ class Helpers():
             new_bounds.append((float(lower), float(upper)))
         return new_bounds
 
-
     @staticmethod
     def has_unique_ids(values, report:bool=True) -> bool:
         """
@@ -106,7 +105,6 @@ class Helpers():
 
         return success
 
-
     @staticmethod
     def all_measurements_have_errors(measurements:List[Measurement]) -> bool:
         """
@@ -137,12 +135,11 @@ class Helpers():
             t_all : numpy.ndarray
                 The joint vector of time points.
         """
-
-        t_all = numpy.array([])
-        for _time_series in time_series:
-            t_all = numpy.append(t_all, _time_series.timepoints)
-        return numpy.unique(t_all)
-
+        _t = [
+            _time_series.timepoints
+            for _time_series in time_series
+        ]
+        return numpy.unique(_t)
 
     @staticmethod
     def extract_time_series(time_series:List[TimeSeries], name:str, replicate_id:str, no_extraction_warning:bool=False) -> TimeSeries:
@@ -197,7 +194,6 @@ class Helpers():
 
         return extracted_time_series
 
-
     @staticmethod
     def get_parameters_length(parameter_collections:Dict[str, numpy.ndarray]) -> int:
         """
@@ -222,7 +218,6 @@ class Helpers():
             raise ValueError('Parameters have different number of estimated values.')
         length = list(lengths)[0]
         return length
-
 
     @staticmethod
     def split_parameters_distributions(parameter_collections:Dict[str, numpy.ndarray]) -> List[Dict]:
