@@ -346,9 +346,11 @@ class TestSensitivites():
         caretaker_multi.get_sensitivities(tfinal=24, responses=['y0'])
         caretaker_multi.get_sensitivities(tfinal=24, parameters=['y00'])
         caretaker_multi.get_sensitivities(tfinal=24, parameters={'y00' : 1000})
-
         # Include tfinal in the timepoints of the measurements
         caretaker_multi.get_sensitivities(measurements=StaticHelpers.data_multi, tfinal=24)
+        # Must requrest known responses
+        with pytest.raises(ValueError):
+            caretaker_multi.get_sensitivities(tfinal=24, responses=['unknown_response'])
         # Must provide either measurements or tfinal
         with pytest.raises(ValueError):
             caretaker_multi.get_sensitivities()
