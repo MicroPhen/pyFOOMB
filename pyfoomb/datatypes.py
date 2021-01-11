@@ -321,13 +321,23 @@ class Measurement(TimeSeries):
         self.error_model = error_model
         self.error_model_parameters = error_model_parameters
         self.error_distribution = error_distribution
-        if distribution_kwargs is None:
-            self.distribution_kwargs = {}
-        else:
-            self.distribution_kwargs = distribution_kwargs
+        self.distribution_kwargs = distribution_kwargs
         if self.errors is None and self.error_model is not None:
             self.apply_error_model()
         self._is_init = False
+
+    @property
+    def distribution_kwargs(self) -> dict:
+        return self._distribution_kwargs
+
+    @distribution_kwargs.setter
+    def distribution_kwargs(self, value):
+        if value is None:
+            self._distribution_kwargs = {}
+        elif isinstance(value, dict):
+            self._distribution_kwargs = value
+        else:
+            raise TypeError('distribution kwargs must be a dictionary')
 
 
     @property
