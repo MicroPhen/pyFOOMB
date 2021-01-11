@@ -2401,7 +2401,7 @@ class Caretaker():
                 All of them, except for certain flags if these are handled.
         """
 
-        if not any(numpy.isfinite(list(guess_dict.values()))) or None in list(guess_dict.values()):
+        if None in list(guess_dict.values()) or not any(numpy.isfinite(list(guess_dict.values()))):
             raise ValueError(f'Some unknowns have invalid values. {guess_dict}')
 
         self.set_parameters(guess_dict)
