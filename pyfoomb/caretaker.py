@@ -129,7 +129,6 @@ class Caretaker():
             )
             if model_checking_assistance:
                 if not model_checker.check_model_consistency(copy.deepcopy(_simulator)):
-                #if not model_checker.check_model_consistency(_simulator):
                     warnings.warn(f'There might by some issues for {_model_name} with replicate_id {_replicate_id}')
             self.simulators[_replicate_id] = _simulator
 
