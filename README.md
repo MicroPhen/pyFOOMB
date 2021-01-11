@@ -1,4 +1,5 @@
 [![codecov](https://codecov.io/gh/MicroPhen/pyFOOMB/branch/main/graph/badge.svg?token=7WALTIPP6O)](https://codecov.io/gh/MicroPhen/pyFOOMB)
+[![Tests](https://github.com/MicroPhen/pyFOOMB/workflows/Tests/badge.svg)](https://github.com/MicroPhen/pyFOOMB/actions)
 [![DOI](https://zenodo.org/badge/309308898.svg)](https://zenodo.org/badge/latestdoi/309308898)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -12,6 +13,8 @@ Intented application is the acessible modelling of simple to medium complex biop
 `pyFOOMB` relies on the `assimulo` package (<https://jmodelica.org/assimulo>), providing an interface to the SUNDIALS CVode integrator for systems of differential equations, as well as event handling routines. For optimization, i.e. model calibration from data, the `pygmo` package is used, which provides Python bindings for the `pagmo2` package implementing the Asynchronous Generalized Islands Model.
 
 To faciliate rapid starting for new users, a continously growing collection of Jupyter notebooks is provided. These serve to demonstrate basic and advanced concepts and functionalities (also beyond the pure functions of the `pyFOOMB` package). Also, the examples can be used as building blocks for developing own bioprocess models and corresponding workflows. 
+
+Check also our [preprint](https://www.biorxiv.org/content/10.1101/2020.11.10.376665v1) at bioRχiv introducing `pyFOOMB` with two more elaborated application examples that reproduce real-world data from literature.
 
 Literature:
 

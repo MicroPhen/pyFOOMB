@@ -1,4 +1,4 @@
-name: Testing in conda env
+name: Tests
 
 on: [push]
 
@@ -10,7 +10,7 @@ jobs:
         max-parallel: 5
         matrix:
             os: [windows-latest, ubuntu-latest]
-            python-version: [3.7, 3.8]
+            python-version: [3.7, 3.8, 3.9]
 
       steps:
         - uses: actions/checkout@v2
