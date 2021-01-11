@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from pyfoomb.caretaker import Caretaker
 from pyfoomb.datatypes import Measurement
+from pyfoomb.generalized_islands import ArchipelagoHelpers
 from pyfoomb.generalized_islands import LossCalculator
 from pyfoomb.generalized_islands import PygmoOptimizers
 from pyfoomb.generalized_islands import ParallelEstimationInfo
@@ -140,3 +141,43 @@ class TestParallelEstimationInfo():
         est_info.runtime_trail
         est_info.plot_loss_trail()
         est_info.plot_loss_trail(x_log=True)
+
+
+class TestArchipelagoHelpers():
+
+    @pytest.mark.parametrize('atol', [None, 1e-1])
+    @pytest.mark.parametrize('rtol', [None, 1e-1])
+    @pytest.mark.parametrize('curr_runtime', [None, 10])
+    @pytest.mark.parametrize('max_runtime', [None, 5])
+    @pytest.mark.parametrize('curr_evotime', [None, 10])
+    @pytest.mark.parametrize('max_evotime', [None, 5])
+    @pytest.mark.parametrize('max_memory_share', [0, 0.95])
+    def test_check_evolution_stop(self, atol, rtol, curr_runtime, max_runtime, curr_evotime, max_evotime, max_memory_share):
+        ArchipelagoHelpers.check_evolution_stop(
+            current_losses=np.array([10.1, 10.2, 9.9]), 
+            atol_islands=atol, 
+            rtol_islands=rtol, 
+            current_runtime_min=curr_runtime, 
+            max_runtime_min=max_runtime,
+            current_evotime_min=curr_evotime,
+            max_evotime_min=max_evotime,
+            max_memory_share=max_memory_share,
+        )
+
+    @pytest.mark.parametrize('report_level', [0, 1, 2, 3, 4])
+    def test_report_evolution_results(self, report_level):
+        reps = 2
+        mock_evolution_results = {
+            'evo_time_min' : [1]*reps,
+            'best_losses' : [[1111, 1111]]*reps,
+            'best_estimates' : [
+                {'p1' : 1, 'p2' : 10}, 
+            ],
+            'estimates_info' : [
+                {
+                    'losses' : [1000, 1100, 1110, 1111],
+                }
+            ]*reps,   
+        }
+        ArchipelagoHelpers.report_evolution_result(mock_evolution_results, report_level)
+
