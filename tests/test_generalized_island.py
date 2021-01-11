@@ -3,6 +3,9 @@ from typing import List
 import pytest
 from unittest.mock import patch
 
+import matplotlib as plt
+plt.rcParams.update({'figure.max_open_warning': 0})
+
 from pyfoomb.caretaker import Caretaker
 from pyfoomb.datatypes import Measurement
 from pyfoomb.generalized_islands import ArchipelagoHelpers
