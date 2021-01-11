@@ -363,3 +363,4 @@ healthchecksdb
 .vscode/settings.json
 /pyfoomb.egg-info
 /.vscode/.ropeproject
+.vscode/launch.json
