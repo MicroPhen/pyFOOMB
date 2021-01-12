@@ -53,22 +53,22 @@ jobs:
           shell: powershell
           run: |
             conda init
-            conda env update --name test --file tests/environment.yml
-            conda activate test
+            conda env update --name build --file tests/environment.yml
+            conda activate build
             python setup.py bdist_wheel
             cd dist
             pip install pyfoomb*.whl
-            python -c "import pyfoomb; print(pyfoomb.__version__)"
+            python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
           if: matrix.os == 'ubuntu-latest' 
           shell: bash -l {0}
           run: |
             conda init
-            conda env update --name test --file tests/environment.yml
-            conda activate test
+            conda env update --name build --file tests/environment.yml
+            conda activate build
             python setup.py bdist_wheel
             cd dist
             pip install pyfoomb*.whl
-            python -c "import pyfoomb; print(f'Sucessfully imported {pyfoomb.__name__} {pyfoomb.__version__}')"
+            python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
 
