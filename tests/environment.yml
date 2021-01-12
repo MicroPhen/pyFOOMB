@@ -14,7 +14,6 @@ dependencies:
   - openpyxl
   - matplotlib
   - seaborn
-  - jupyter
   - psutil
   - pip
   - assimulo
