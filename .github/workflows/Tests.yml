@@ -28,9 +28,8 @@ jobs:
             conda init
             conda env update --name test --file tests/environment.yml
             conda activate test
-            conda install coverage
             pip install -e .
-            coverage run tests/tests_pyfoomb.py ; coverage report -m ; coverage xml
+            pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
         - name: Test with unittest on Ubuntu
           if: matrix.os == 'ubuntu-latest' 
@@ -39,9 +38,8 @@ jobs:
             conda init
             conda env update --name test --file tests/environment.yml
             conda activate test
-            conda install coverage
             pip install -e .
-            coverage run tests/tests_pyfoomb.py && coverage report -m && coverage xml
+            pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
         - name: Upload coverage
           if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.8

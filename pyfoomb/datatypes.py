@@ -321,11 +321,23 @@ class Measurement(TimeSeries):
         self.error_model = error_model
         self.error_model_parameters = error_model_parameters
         self.error_distribution = error_distribution
-        if distribution_kwargs is None:
-            self.distribution_kwargs = {}
+        self.distribution_kwargs = distribution_kwargs
         if self.errors is None and self.error_model is not None:
             self.apply_error_model()
         self._is_init = False
+
+    @property
+    def distribution_kwargs(self) -> dict:
+        return self._distribution_kwargs
+
+    @distribution_kwargs.setter
+    def distribution_kwargs(self, value):
+        if value is None:
+            self._distribution_kwargs = {}
+        elif isinstance(value, dict):
+            self._distribution_kwargs = value
+        else:
+            raise TypeError('distribution kwargs must be a dictionary')
 
 
     @property
@@ -509,7 +521,13 @@ class Measurement(TimeSeries):
 
         _prediction = [
             prediction for prediction in predictions 
-            if (prediction.name == self.name and prediction.replicate_id == self.replicate_id)
+            if (
+                (
+                    prediction.name == self.name and prediction.replicate_id == self.replicate_id
+                ) or (
+                    prediction.name == self.name and (prediction.replicate_id is None and self.replicate_id is None)
+                )
+            )
         ]
 
         if len(_prediction) > 1:
@@ -527,10 +545,10 @@ class Measurement(TimeSeries):
         if prediction_mask.sum() < len(self.timepoints):
             measurement_mask = numpy.isin(self.timepoints, prediction.timepoints)
             y_meas = self.values[measurement_mask]
-            y_meas_err = self.errors[measurement_mask]
+            y_meas_err = self.errors[measurement_mask] if self.errors is not None else None
         else:
             y_meas = self.values
-            y_meas_err = self.errors
+            y_meas_err = self.errors if self.errors is not None else None
 
         if metric in ['negLL', 'negative-log-likelihood']:
             if self.errors is None and isinstance(self.error_distribution, scipy.stats.rv_continuous):
@@ -578,9 +596,10 @@ class Measurement(TimeSeries):
         if self.errors is None:
             raise AttributeError('Property `errors` is None, thus cannot sample random values.')
         # get rvs for masked values
-        _rvs_masked = self.error_distribution.rvs(loc=self.values, scale=self.errors, **distribution_kwargs)
         _rvs_unmasked = numpy.zeros_like(self.joint_mask)*numpy.nan
-        _rvs_unmasked[self.joint_mask] = _rvs_masked
+        # Make sure to get nonnan values only at the maks positions
+        _rvs_masked = self.error_distribution.rvs(loc=self.values, scale=self.errors, **distribution_kwargs)
+        _rvs_unmasked[self.joint_mask] = _rvs_masked 
 
         return _rvs_unmasked
 
