@@ -48,7 +48,19 @@ jobs:
             token: ${{ secrets.CODECOV_TOKEN }}
             file: ./coverage.xml
             
-        - name: Build wheel
+        - name: Build wheel on Windows
+          if: matrix.os == 'windows-latest'
+          shell: powershell
+          run: |
+            conda init
+            conda env update --name test --file tests/environment.yml
+            conda activate test
+            python setup.py bdist_wheel
+            cd dist
+            pip install pyfoomb*.whl
+            python -c "import pyfoomb; print(pyfoomb.__version__)"
+            
+        - name: Build wheel on Ubuntu
           if: matrix.os == 'ubuntu-latest' 
           shell: bash -l {0}
           run: |
@@ -58,5 +70,5 @@ jobs:
             python setup.py bdist_wheel
             cd dist
             pip install pyfoomb*.whl
-            python -c "import pyfoomb; print(pyfoomb.__version__)"
+            python -c "import pyfoomb; print(f'Sucessfully imported {pyfoomb.__name__} {pyfoomb.__version__})"
 
