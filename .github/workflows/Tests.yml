@@ -49,7 +49,12 @@ jobs:
             file: ./coverage.xml
             
         - name: Build wheel
+          if: matrix.os == 'ubuntu-latest' 
+          shell: bash -l {0}
           run: |
+            conda init
+            conda env update --name test --file tests/environment.yml
+            conda activate test
             python setup.py bdist_wheel
             cd dist
             pip install pyfoomb*.whl
