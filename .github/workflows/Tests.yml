@@ -1,27 +1,27 @@
 name: Tests
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
     test-unittest:
       name: Test (${{ matrix.python-version }}, ${{ matrix.os }})
       runs-on: ${{ matrix.os }}
       strategy:
-        max-parallel: 5
+        max-parallel: 6
         matrix:
             os: [windows-latest, ubuntu-latest]
             python-version: [3.7, 3.8, 3.9]
 
       steps:
         - uses: actions/checkout@v2
-        - uses: conda-incubator/setup-miniconda@v2.0.0
+        - uses: conda-incubator/setup-miniconda@v2
           with:
             miniconda-version: "latest"
             python-version: ${{ matrix.python-version }}
             auto-activate-base: true
             add-pip-as-python-dependency: true
 
-        - name: Test with unittest on Windows
+        - name: Run tests on Windows
           if: matrix.os == 'windows-latest'
           shell: powershell
           run: |
@@ -31,7 +31,7 @@ jobs:
             pip install -e .
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
-        - name: Test with unittest on Ubuntu
+        - name: Run tests on Ubuntu
           if: matrix.os == 'ubuntu-latest' 
           shell: bash -l {0}
           run: |
@@ -42,9 +42,32 @@ jobs:
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
         - name: Upload coverage
-          if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.8
+          if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.9
           uses: "codecov/codecov-action@v1"
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             file: ./coverage.xml
+            
+        - name: Build wheel on Windows
+          if: matrix.os == 'windows-latest'
+          shell: powershell
+          run: |
+            conda init
+            conda env update --name build --file tests/environment.yml
+            conda activate build
+            python setup.py bdist_wheel
+            pip install dist/pyfoomb*.whl
+            python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
+            
+        - name: Build wheel on Ubuntu
+          if: matrix.os == 'ubuntu-latest' 
+          shell: bash -l {0}
+          run: |
+            conda init
+            conda env update --name build --file tests/environment.yml
+            conda activate build
+            python setup.py bdist_wheel
+            cd dist
+            pip install pyfoomb*.whl
+            python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
 
