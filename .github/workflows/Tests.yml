@@ -70,5 +70,5 @@ jobs:
             python setup.py bdist_wheel
             cd dist
             pip install pyfoomb*.whl
-            python -c "import pyfoomb; print(f'Sucessfully imported {pyfoomb.__name__} {pyfoomb.__version__})"
+            python -c "import pyfoomb; print(f'Sucessfully imported {pyfoomb.__name__} {pyfoomb.__version__}')"
 
