@@ -122,6 +122,15 @@ class Visualization():
         else:
             _alpha = 0.1
 
+        # Get a joint time vector for all time series
+        t_all = numpy.unique(
+            [
+                _t 
+                for _time_series in multi_time_series
+                for _t in Helpers.get_unique_timepoints(_time_series)
+            ]
+        ).flatten()
+
         for _replicate_id in replicate_ids:
 
             fig, ax = figs_axs[_replicate_id]
@@ -136,9 +145,12 @@ class Visualization():
                     ]
 
                 for _single_replicate_time_series, _name, _ax in zip(_single_replicate_time_series, names, ax.flat):
-                    _values_vectors[_name].append(_single_replicate_time_series.values)
+                    _t = _single_replicate_time_series.timepoints
+                    _values = numpy.empty_like(t_all)*numpy.nan
+                    _values[numpy.in1d(t_all, _t)] = _single_replicate_time_series.values.flatten()
+                    _values_vectors[_name].append(_values)
                     _ax.plot(
-                        _single_replicate_time_series.timepoints, 
+                        t_all, 
                         _values_vectors[_name][-1], 
                         color='red', 
                         alpha=_alpha,
@@ -148,8 +160,8 @@ class Visualization():
             # Calculate and plot median for name
             for _name, _ax in zip(names, ax.flat):
                 _ax.plot(
-                    _single_replicate_time_series.timepoints, 
-                    numpy.median(_values_vectors[_name], axis=0), 
+                    t_all, 
+                    numpy.nanmedian(_values_vectors[_name], axis=0), 
                     color='grey', 
                     zorder=2,
                     label=f'Median for {_name}'

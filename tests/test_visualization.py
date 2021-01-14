@@ -1,8 +1,9 @@
-
+import numpy as np
 import pytest
 
 from pyfoomb.caretaker import Caretaker
 from pyfoomb.datatypes import Measurement
+from pyfoomb.datatypes import TimeSeries
 from pyfoomb.visualization import Visualization
 from pyfoomb.visualization import VisualizationHelpers
 
@@ -10,11 +11,15 @@ from modelling_library import ModelLibrary
 
 class StaticHelpers():
 
-    data_single = [Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 20 ,30], errors=[0.1, 0.2, 0.3])]
+    data_single = [Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 10 ,10], errors=[0.1, 0.2, 0.3])]
     data_multi = [
-        Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 20 ,30], errors=[0.1, 0.2, 0.3], replicate_id='1st'),
-        Measurement(name='y0', timepoints=[1, 5, 10], values=[10, 20 ,30], errors=[0.1, 0.2, 0.3], replicate_id='2nd'),
+        Measurement(name='y0', timepoints=[1, 2, 3], values=[10, 10 ,10], errors=[0.1, 0.2, 0.3], replicate_id='1st'),
+        Measurement(name='y0', timepoints=[1, 5, 10], values=[10, 10 ,10], errors=[0.1, 0.2, 0.3], replicate_id='2nd'),
     ]
+    many_time_series_1 = [
+        [TimeSeries(name='T1', timepoints=[1, 2, 3, 4], values=[10, 10, 10, 10], replicate_id='1st')],
+        [TimeSeries(name='T1', timepoints=[1, 2, 3], values=[10, 10, 10], replicate_id='1st')],
+    ] 
     unknowns = ['y00', 'y10']
     bounds = [(-100, 100), (-100, 100)]
 
@@ -50,8 +55,20 @@ class TestVisualization():
     def test_show_kinetic_data(self, measurements):
         Visualization.show_kinetic_data(time_series=measurements)
 
-    def test_show_kinetic_data_many(self):
-        Visualization.show_kinetic_data_many(time_series=[StaticHelpers.data_multi]*2)
+    @pytest.mark.filterwarnings('ignore:All-NaN slice encountered')
+    @pytest.mark.parametrize(
+        'time_series' ,
+        [
+            [StaticHelpers.data_multi]*2,
+            StaticHelpers.many_time_series_1,
+        ]
+    )
+    def test_show_kinetic_data_many(self, time_series):
+        figsax = Visualization.show_kinetic_data_many(time_series=time_series)
+        for _key in figsax:
+            for _line in figsax[_key][1][0].lines:
+                for _value in _line._y:
+                    assert _value == 10 or np.isnan(_value)
 
     @pytest.mark.parametrize('measurements', [StaticHelpers.data_single, StaticHelpers.data_multi])
     def test_compare_estimates(self, caretaker_single, measurements):
