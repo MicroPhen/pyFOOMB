@@ -136,8 +136,9 @@ class Helpers():
                 The joint vector of time points.
         """
         _t = [
-            _time_series.timepoints
+            _timepoint 
             for _time_series in time_series
+            for _timepoint in _time_series.timepoints.flatten() 
         ]
         return numpy.unique(_t)
 
