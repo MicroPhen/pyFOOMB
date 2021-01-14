@@ -10,6 +10,13 @@ from pyfoomb.utils import Calculations
 from pyfoomb.utils import Helpers
 
 
+class StaticData():
+    measurements_wo_errors = Measurement(name='M1', timepoints=[1, 2, 3], values=[10, 20, 30], replicate_id='1st')
+    measurements_w_errors = Measurement(name='M2', timepoints=[2, 3, 4], values=[20, 30, 40], errors=[1/20, 1/30, 1/40], replicate_id='1st')
+    time_series_1 = TimeSeries(name='TS1', timepoints=[1, 2], values=[10, 20], replicate_id='1st')
+    time_series_2 = TimeSeries(name='TS2', timepoints=[2, 3], values=[20, 30], replicate_id='2nd')
+
+
 class TestCalculations():
 
     def test_corr(self):
@@ -75,21 +82,20 @@ class TestHelpers():
             Helpers.has_unique_ids(('a01', 'b01'))
 
     def test_utils_for_datatypes(self):
-        measurements_wo_errors = Measurement(name='M1', timepoints=[1, 2, 3], values=[10, 20, 30], replicate_id='1st')
-        measurements_w_errors = Measurement(name='M2', timepoints=[2, 3, 4], values=[20, 30, 40], errors=[1/20, 1/30, 1/40], replicate_id='1st')
+        
 
         # To check whether all measurements in a list of those hve errors or not
-        assert Helpers.all_measurements_have_errors([measurements_wo_errors, measurements_w_errors]) == False
-        assert Helpers.all_measurements_have_errors([measurements_w_errors, measurements_w_errors]) == True
-        assert Helpers.all_measurements_have_errors([measurements_wo_errors, measurements_wo_errors]) == False
+        assert Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_w_errors]) == False
+        assert Helpers.all_measurements_have_errors([StaticData.measurements_w_errors, StaticData.measurements_w_errors]) == True
+        assert Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_wo_errors]) == False
 
         # Get the joint time vector of several TimeSeries objects
-        actual = Helpers.get_unique_timepoints([measurements_wo_errors, measurements_w_errors])
+        actual = Helpers.get_unique_timepoints([StaticData.measurements_wo_errors, StaticData.measurements_w_errors])
         for _actual, _expected in zip(actual, np.array([1., 2., 3., 4.])):
             assert _actual == _expected
 
         # Extract a specific TimeSeries from a list
-        timeseries_list = [measurements_wo_errors, measurements_w_errors]
+        timeseries_list = [StaticData.measurements_wo_errors, StaticData.measurements_w_errors]
         assert isinstance(Helpers.extract_time_series(timeseries_list, replicate_id='1st', name='M1'), TimeSeries)
         # In case not match is found, the method returns None
         with pytest.warns(UserWarning):
@@ -121,3 +127,16 @@ class TestHelpers():
         parameter_slices = Helpers.split_parameters_distributions(parameter_collection_ok)
         for parameter_slice in parameter_slices:
             assert list(parameter_slice.keys()) == list(parameter_collection_ok.keys())
+
+    def test_unique_timepoints(self):
+        t_all = Helpers.get_unique_timepoints(
+            [
+                StaticData.time_series_1, 
+                StaticData.time_series_2, 
+                StaticData.measurements_w_errors, 
+                StaticData.measurements_wo_errors,
+            ]
+        )
+        assert len(t_all) == 4
+        assert all(np.equal(t_all, np.array([1, 2, 3, 4])))
+
