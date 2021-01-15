@@ -55,7 +55,8 @@ jobs:
             conda init
             conda env update --name build --file tests/environment.yml
             conda activate build
-            python setup.py bdist_wheel
+            pip install -U pip pep517 twine
+            python -m pep517.build .
             pip install dist/pyfoomb*.whl
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
@@ -66,7 +67,8 @@ jobs:
             conda init
             conda env update --name build --file tests/environment.yml
             conda activate build
-            python setup.py bdist_wheel
+            pip install -U pip pep517 twine
+            python -m pep517.build .
             cd dist
             pip install pyfoomb*.whl
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
