@@ -19,6 +19,7 @@ __version__ = get_version()
 setuptools.setup(name = __packagename__,
         packages = setuptools.find_packages(exclude=['examples', '*test*']),
         version=__version__,
+        zip_safe=False,
         description='Package for handling systems of ordinary differential equations (ODEs) with discontinuities. Relies on assimulo package for ODE integration and pygmo package for optimization.',
         author='Johannes Hemmerich',
         author_email='hemmerich@outlook.com',
