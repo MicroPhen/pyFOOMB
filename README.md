@@ -48,4 +48,5 @@ via `git clone https://github.com/MicroPhen/pyFOOMB.git`
 4) Verify that you are in the repo folder, where the file `environment.yml` is found (`dir` for Windows, `ls` for Linux/Mac).
 5) Exceute `conda env create -f environment.yml`.
 This will create a conda environment named `pyfoomb`, with the current version of the just cloned git repository.
-6) To make sure, your environment will refer always the state of your git repo (i.e., after own code modifications or after pulling from remote), run `pip install -e ../pyfoomb`. 
+6) Don't forget to activate the newly created environment to install the `pyFOOMB` package in the next step
+7) To make sure, your environment will refer always the state of your git repo (i.e., after own code modifications or after pulling from remote), run `pip install -e ../pyfoomb`. 
