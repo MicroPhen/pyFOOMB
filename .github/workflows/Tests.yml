@@ -23,7 +23,7 @@ jobs:
 
         - name: Run tests on Windows
           if: matrix.os == 'windows-latest'
-          shell: powershell
+          shell: cmd
           run: |
             conda init
             conda env update --name test --file environment.yml
@@ -52,7 +52,7 @@ jobs:
             
         - name: Build wheel on Windows
           if: matrix.os == 'windows-latest'
-          shell: powershell
+          shell: cmd
           run: |
             conda init
             conda env update --name build --file environment.yml
