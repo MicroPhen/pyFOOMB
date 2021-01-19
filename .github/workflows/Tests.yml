@@ -26,8 +26,9 @@ jobs:
           shell: powershell
           run: |
             conda init
-            conda env update --name test --file tests/environment.yml
+            conda env update --name test --file environment.yml
             conda activate test
+            conda install pytest pytest-cov
             pip install -e .
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
@@ -36,8 +37,9 @@ jobs:
           shell: bash -l {0}
           run: |
             conda init
-            conda env update --name test --file tests/environment.yml
+            conda env update --name test --file environment.yml
             conda activate test
+            conda install pytest pytest-cov
             pip install -e .
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
@@ -53,7 +55,7 @@ jobs:
           shell: powershell
           run: |
             conda init
-            conda env update --name build --file tests/environment.yml
+            conda env update --name build --file environment.yml
             conda activate build
             pip install -U pip pep517 twine
             python -m pep517.build .
@@ -65,7 +67,7 @@ jobs:
           shell: bash -l {0}
           run: |
             conda init
-            conda env update --name build --file tests/environment.yml
+            conda env update --name build --file environment.yml
             conda activate build
             pip install -U pip pep517 twine
             python -m pep517.build .
