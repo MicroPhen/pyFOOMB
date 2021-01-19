@@ -10,11 +10,8 @@ dependencies:
   - scipy
   - joblib
   - pandas>=0.24
-  - xlrd
-  - openpyxl
-  - matplotlib
-  - seaborn
-  - jupyter
+  - matplotlib-base
+  - seaborn-base
   - psutil
   - pip
   - assimulo
