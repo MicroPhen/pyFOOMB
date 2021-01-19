@@ -74,4 +74,4 @@ jobs:
             cd dist
             pip install pyfoomb*.whl
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
-
+            openssl sha256 pyfoomb*.tar.gz
