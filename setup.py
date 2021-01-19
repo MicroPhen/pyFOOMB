@@ -35,12 +35,11 @@ setuptools.setup(name = __packagename__,
             'numpy',
             'scipy',
             'pandas>=0.24',
-            'xlrd>=1',
             'openpyxl',
             'joblib',
             'matplotlib',
             'seaborn',
-            'IPython',
             'assimulo',
+            'psutil',
         ]
 )

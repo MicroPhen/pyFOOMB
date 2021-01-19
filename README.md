@@ -30,16 +30,20 @@ Literature:
 * scipy
 * joblib
 * pandas
-* xlrd
 * openpyxl
-* matplotlib
-* seaborn
-* jupyter
+* matplotlib(-base)
+* seaborn(-base)
 * psutil
 * assimulo (via conda-forge)
 * pygmo (via conda-forge)
 
-## Installation
+## Easy installation
+
+1) Open a terminal / shell
+2) Optional: Create a new environment with `conda env create -n my-pyfoomb-env python=3.9` and activate it with `conda activate my-pyfoomb-env`
+3) Install `pyFOOMB` by executing `conda install -c conda-forge pyfoomb`
+
+## Development installation
 
 1) Download the code repository to your computer, this is done the best way using `git clone`: In a shell, navigate to the folder where you want the repository to be located.
 2) Open a terminal / shell and clone the repository
