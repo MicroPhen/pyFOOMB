@@ -419,6 +419,15 @@ class ArchipelagoHelpers():
 
 
     @staticmethod
+    def create_population(pg_problem, pop_size, seed):
+        return pygmo.population(pg_problem, pop_size, seed=seed)
+
+    @staticmethod 
+    def parallel_create_population(arg):
+        pg_problem, pop_size, seed = arg
+        return ArchipelagoHelpers.create_population(pg_problem, pop_size, seed)
+
+    @staticmethod
     def create_archipelago(unknowns:list, 
                            optimizers:list, 
                            optimizers_kwargs:list, 
@@ -483,27 +492,18 @@ class ArchipelagoHelpers():
         if report_level >= 1:
             print(f'Creating archipelago with {n_islands} islands. May take some time...')
 
-        # Generator expression for creating the popsize
-        # pop_size = int(numpy.ceil(rel_pop_size*len(unknowns))) 
-        # pops = (
-        #     pygmo.population(pg_problem, pop_size, seed=seed*numpy.random.randint(0, 1e4))
-        #     for seed, pop_size in enumerate([pop_size] * n_islands)
-        # )
-
-        # DEVELOPMENT: Creating the pops in parallel to speed up archi-creationpython
-
-        def pop_creation(seed):
-            return pygmo.population(pg_problem, pop_size, seed=seed)
-
         pop_size = int(numpy.ceil(rel_pop_size*len(unknowns))) 
-        seeds = (
-            seed*numpy.random.randint(0, 1e4)
+        prop_create_args = (
+            (pg_problem, pop_size, seed*numpy.random.randint(0, 1e4))
             for seed, pop_size in enumerate([pop_size] * n_islands)
-        )     
-        with joblib.parallel_backend('loky', n_jobs=n_islands):
-            pops = joblib.Parallel(verbose=1)(map(joblib.delayed(pop_creation), seeds))
-
-
+        )
+        try:
+            parallel_verbose = 0 if report_level == 0 else 1
+            with joblib.parallel_backend('loky', n_jobs=n_islands):
+                pops = joblib.Parallel(verbose=parallel_verbose)(map(joblib.delayed(ArchipelagoHelpers.parallel_create_population), prop_create_args))
+        except Exception as ex:
+            print(f'Parallelized archipelago creation failed, falling back to sequential\n{ex}')
+            pops = (ArchipelagoHelpers.parallel_create_population(prop_create_arg) for prop_create_arg in prop_create_args)
 
         # Now create the empyty archipelago
         if not 't' in archipelago_kwargs.keys():
