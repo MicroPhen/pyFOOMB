@@ -52,14 +52,14 @@ jobs:
             
         - name: Build wheel on Windows
           if: matrix.os == 'windows-latest'
-          shell: cmd
-          run: >-
-            conda init &&
-            conda env update --name build --file environment.yml &&
-            conda activate build &&
-            pip install -U pip pep517 twine &&
-            python -m pep517.build . &&
-            pip install pyfoomb*.whl &&
+          shell: powershell
+          run: |
+            conda init
+            conda env update --name build --file environment.yml
+            conda activate build
+            pip install -U pip pep517 twine
+            python -m pep517.build . 
+            pip install dist/pyfoomb*.whl 
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
