@@ -484,11 +484,26 @@ class ArchipelagoHelpers():
             print(f'Creating archipelago with {n_islands} islands. May take some time...')
 
         # Generator expression for creating the popsize
+        # pop_size = int(numpy.ceil(rel_pop_size*len(unknowns))) 
+        # pops = (
+        #     pygmo.population(pg_problem, pop_size, seed=seed*numpy.random.randint(0, 1e4))
+        #     for seed, pop_size in enumerate([pop_size] * n_islands)
+        # )
+
+        # DEVELOPMENT: Creating the pops in parallel to speed up archi-creationpython
+
+        def pop_creation(seed):
+            return pygmo.population(pg_problem, pop_size, seed=seed)
+
         pop_size = int(numpy.ceil(rel_pop_size*len(unknowns))) 
-        pops = (
-            pygmo.population(pg_problem, pop_size, seed=seed*numpy.random.randint(0, 1e4))
+        seeds = (
+            seed*numpy.random.randint(0, 1e4)
             for seed, pop_size in enumerate([pop_size] * n_islands)
-        )
+        )     
+        with joblib.parallel_backend('loky', n_jobs=n_islands):
+            pops = joblib.Parallel(verbose=1)(map(joblib.delayed(pop_creation), seeds))
+
+
 
         # Now create the empyty archipelago
         if not 't' in archipelago_kwargs.keys():
