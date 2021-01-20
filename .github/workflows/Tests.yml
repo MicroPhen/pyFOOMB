@@ -25,11 +25,11 @@ jobs:
           if: matrix.os == 'windows-latest'
           shell: cmd
           run: >-
-            conda init
-            conda env update --name test --file environment.yml
-            conda activate test
-            conda install pytest pytest-cov
-            pip install -e .
+            conda init &&
+            conda env update --name test --file environment.yml &&
+            conda activate test &&
+            conda install pytest pytest-cov &&
+            pip install -e . &&
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
         - name: Run tests on Ubuntu
@@ -54,12 +54,12 @@ jobs:
           if: matrix.os == 'windows-latest'
           shell: cmd
           run: >-
-            conda init
-            conda env update --name build --file environment.yml
-            conda activate build
-            pip install -U pip pep517 twine
-            python -m pep517.build .
-            pip install dist/pyfoomb*.whl
+            conda init &&
+            conda env update --name build --file environment.yml &&
+            conda activate build &&
+            pip install -U pip pep517 twine &&
+            python -m pep517.build . &&
+            pip install dist/pyfoomb*.whl &&
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
