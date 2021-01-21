@@ -244,8 +244,4 @@ class TestModelObserver():
         observer.get_observations(model_states=[modelstate])
         # There is also a str method
         print(observer)
-
         
-
-
-

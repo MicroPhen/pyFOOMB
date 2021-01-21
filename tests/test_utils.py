@@ -61,7 +61,7 @@ class TestHelpers():
         """
         To ensure that ids (replicate_ids, states, etc) are case-insensitive unique
         """
-        assert Helpers.has_unique_ids(ok_ids) == True
+        assert Helpers.has_unique_ids(ok_ids)
 
     @pytest.mark.parametrize(
         'not_ok_ids',
@@ -75,7 +75,7 @@ class TestHelpers():
         """
         To ensure that ids (replicate_ids, states, etc) are case-insensitive unique
         """
-        assert Helpers.has_unique_ids(not_ok_ids) == False
+        assert not Helpers.has_unique_ids(not_ok_ids)
 
     def test_unique_ids_must_be_list_or_dict(self):
         with pytest.raises(TypeError):
@@ -83,11 +83,10 @@ class TestHelpers():
 
     def test_utils_for_datatypes(self):
         
-
         # To check whether all measurements in a list of those hve errors or not
-        assert Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_w_errors]) == False
-        assert Helpers.all_measurements_have_errors([StaticData.measurements_w_errors, StaticData.measurements_w_errors]) == True
-        assert Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_wo_errors]) == False
+        assert not Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_w_errors])
+        assert Helpers.all_measurements_have_errors([StaticData.measurements_w_errors, StaticData.measurements_w_errors])
+        assert not Helpers.all_measurements_have_errors([StaticData.measurements_wo_errors, StaticData.measurements_wo_errors]) 
 
         # Get the joint time vector of several TimeSeries objects
         actual = Helpers.get_unique_timepoints([StaticData.measurements_wo_errors, StaticData.measurements_w_errors])
@@ -139,4 +138,3 @@ class TestHelpers():
         )
         assert len(t_all) == 4
         assert all(np.equal(t_all, np.array([1, 2, 3, 4])))
-

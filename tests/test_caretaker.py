@@ -501,6 +501,3 @@ class TestMatrices():
             )
         # Therefore, the derivced stdErr are infinite
         assert np.isinf(uncerts['StdErrs'])
-
-
-

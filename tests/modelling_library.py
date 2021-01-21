@@ -643,4 +643,3 @@ class ObservationFunctionLibrary():
         ObservationFunction01_Bad01,
         ObservationFunction01_Bad02,
     ]
-

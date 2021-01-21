@@ -15,6 +15,7 @@ from .datatypes import Measurement
 
 from .utils import Helpers
 
+matplotlib.use('agg')
 pyplot.style.use('ggplot')
 
 

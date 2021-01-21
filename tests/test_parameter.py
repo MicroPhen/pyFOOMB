@@ -127,4 +127,4 @@ class TestParameterManager():
                     ParameterMapper(replicate_id='2nd', global_name='p1', local_name='p1_local', value=1000),
                 ]
             )
-
+            

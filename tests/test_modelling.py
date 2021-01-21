@@ -156,25 +156,4 @@ class TestObservationFunction():
 
         # There is a str method
         print(observation_function)
-
-
-    
-
-
-
-
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
