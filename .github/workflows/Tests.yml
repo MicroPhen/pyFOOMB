@@ -33,7 +33,7 @@ jobs:
             pytest --cov-report xml --cov-report term-missing --cov=pyfoomb tests/ -v
 
         - name: Run tests on Ubuntu
-          if: matrix.os == 'ubuntu-latest' 
+          if: matrix.os == 'ubuntu-latest'
           shell: bash -l {0}
           run: |
             conda init
@@ -49,7 +49,7 @@ jobs:
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             file: ./coverage.xml
-            
+          
         - name: Build wheel on Windows
           if: matrix.os == 'windows-latest'
           shell: powershell
@@ -63,7 +63,7 @@ jobs:
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
-          if: matrix.os == 'ubuntu-latest' 
+          if: matrix.os == 'ubuntu-latest'
           shell: bash -l {0}
           run: |
             conda init
