@@ -12,7 +12,6 @@ import pygmo
 
 from .datatypes import Measurement
 
-matplotlib.use('agg')
 pyplot.style.use('ggplot')
 
 
