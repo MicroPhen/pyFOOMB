@@ -55,8 +55,8 @@ jobs:
           shell: powershell
           run: |
             conda init
-            conda env update --name build --file environment.yml
-            conda activate build
+            conda env create --name build-test --file environment.yml
+            conda activate build-test
             pip install -U pip pep517 twine
             python -m pep517.build . 
             cd dist
@@ -68,8 +68,8 @@ jobs:
           shell: bash -l {0}
           run: |
             conda init
-            conda env update --name build --file environment.yml
-            conda activate build
+            conda env create --name build-test --file environment.yml
+            conda activate build-test
             pip install -U pip pep517 twine
             python -m pep517.build .
             cd dist
