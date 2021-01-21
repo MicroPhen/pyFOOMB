@@ -3,7 +3,8 @@ import setuptools
 __packagename__ = 'pyfoomb'
 
 def get_version():
-    import os, re
+    import os
+    import re
     VERSIONFILE = os.path.join(__packagename__, '__init__.py')
     initfile_lines = open(VERSIONFILE, 'rt').readlines()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"

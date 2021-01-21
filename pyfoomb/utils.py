@@ -93,7 +93,7 @@ class Helpers():
             values_str_lower = [_value.lower() for _value in _values]
             if len(_values) > len(set(values_str_lower)):
                 success = False
-        elif isinstance(_values, dict) or isinstance(_values, OwnDict):
+        elif isinstance(_values, (dict, OwnDict)):
             _values = list(_values.keys())
             values_str_lower = [_value.lower() for _value in _values]
             if len(_values) > len(set(values_str_lower)):
@@ -186,7 +186,7 @@ class Helpers():
 
         if len(_extracted_time_series) > 1:
             raise ValueError('List of (subclassed) TimeSeries objects is ambigous. Found multiple occurences ')
-        elif len(_extracted_time_series) == 0:
+        if len(_extracted_time_series) == 0:
             extracted_time_series = None
             if no_extraction_warning:
                 warnings.warn(f'Could not extract a TimeSeries object with replicate_id {replicate_id} and name {name}')

@@ -130,8 +130,4 @@ class TestObservationFunction():
         # These checks sould raise any warnings
         with pytest.warns(UserWarning):
             model_checker.check_model_consistency(extended_simulator)
-
-
-
-
-
+            

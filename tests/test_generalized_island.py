@@ -182,4 +182,4 @@ class TestArchipelagoHelpers():
             ]*reps,   
         }
         ArchipelagoHelpers.report_evolution_result(mock_evolution_results, report_level)
-
+        

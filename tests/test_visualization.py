@@ -95,4 +95,3 @@ class TestVisualization():
             },
             estimates=estimates,
         )
-
