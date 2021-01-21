@@ -49,24 +49,9 @@ jobs:
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             file: ./coverage.xml
-          
-        - name: Build wheel on Windows
-          if: matrix.os == 'windows-latest'
-          shell: powershell
-          run: |
-            conda init
-            conda env create --name build-test --file environment.yml
-            conda activate build-test
-            pip install -U pip pep517 twine wheel
-            python -m pep517.build . 
-            python -m wheel install dist/pyfoomb*.whl 
-            dir
-            cd dist
-            dir
-            python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
-        - name: Build wheel on Ubuntu
-          if: matrix.os == 'ubuntu-latest'
+        - name: Build wheel 
+          if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.9
           shell: bash -l {0}
           run: |
             conda init
