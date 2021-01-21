@@ -1,6 +1,7 @@
 import contextlib
 import io
 import joblib
+import matplotlib
 from matplotlib import pyplot
 import numpy
 import psutil
@@ -10,6 +11,9 @@ from assimulo.solvers.sundials import CVodeError
 import pygmo
 
 from .datatypes import Measurement
+
+matplotlib.use('agg')
+pyplot.style.use('ggplot')
 
 
 class LossCalculator():

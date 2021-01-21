@@ -11,7 +11,7 @@ dependencies:
   - joblib
   - pandas>=0.24
   - openpyxl
-  - matplotlib
+  - matplotlib-base
   - seaborn-base
   - psutil
   - pip
