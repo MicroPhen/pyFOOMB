@@ -30,9 +30,8 @@ class CovOptimality():
             raise ValueError('Parameter covariance matrix must be square')
         if numpy.isinf(Cov).any():
             return numpy.nan
-        else:
-            opt_fun = self._get_optimality_function(criterion)
-            return opt_fun(Cov)
+        opt_fun = self._get_optimality_function(criterion)
+        return opt_fun(Cov)
 
 
     def _get_optimality_function(self, criterion:str):

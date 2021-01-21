@@ -1,4 +1,4 @@
-__version__ = '2.17.3'
+__version__ = '2.17.4'
 
 # import major classes the user will interact with
 from .modelling import BioprocessModel

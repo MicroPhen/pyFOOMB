@@ -335,16 +335,3 @@ class TestMiscellaneous():
         # Does not work in case there are no errors
         with pytest.raises(AttributeError):
             StaticDatatypes.measurement_wo_errs._get_random_samples_values()
-
-
-
-
-
-
-
-
-
-
-
-
-

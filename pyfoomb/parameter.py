@@ -26,8 +26,7 @@ class ParameterMapper():
         if self.local_name is None:
             if self.replicate_id == 'all' or isinstance(self.replicate_id, list):
                 raise ValueError('Argument `local_name` cannot be None when `replicate_id` is "all" or a list of replicate_ids')
-            else:
-                self.local_name = f'{self.global_name}_{self.replicate_id}'
+            self.local_name = f'{self.global_name}_{self.replicate_id}'
 
 
 class Parameter():

@@ -132,8 +132,7 @@ class Simulator():
     def integrator_kwargs(self, value):
         if value is not None and not isinstance(value, dict):
             raise ValueError('Integrator kwargs must be dictionary or `None`')
-        else:
-            self._integrator_kwargs = value
+        self._integrator_kwargs = value
 
 
     #%% Public methods
@@ -522,7 +521,7 @@ class ModelObserver():
                 raise ValueError('Must provide a list of tuples containing ObservationFunction subclasses and dicts with corresponding observation parameters')
             if not isinstance(_obs[1], dict):
                 raise TypeError(f'Second item of {_obs} must be a dictionary holding the observation parameters')
-            if not OBSERVED_STATE_KEY in list(_obs[1].keys()):
+            if OBSERVED_STATE_KEY not in list(_obs[1].keys()):
                 raise KeyError(f'Observation parameters dictionary for {_obs[0]} indicated not the observed state')
 
             _obs_fun = _obs[0]

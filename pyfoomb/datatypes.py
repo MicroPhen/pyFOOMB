@@ -129,10 +129,9 @@ class TimeSeries(object):
         if len(_in_array.shape) > 1:
             if len(_in_array.shape) > 2 or _in_array.shape[1] > 1:
                 raise ValueError('Only arrays with one dimension are supported')
-            else:
-                out_array = _in_array.flatten()
+            out_array = _in_array.flatten()
         else:
-            out_array =  _in_array.flatten()
+            out_array = _in_array.flatten()
 
         return out_array
 
@@ -177,8 +176,7 @@ class TimeSeries(object):
     def __str__(self):
         if self.info is None:
             return f'{self.__class__.__name__} | Name: {self.name} | Replicate ID: {self.replicate_id}'
-        else:
-            return f'{self.__class__.__name__} | Name: {self.name} | Replicate ID: {self.replicate_id} | Info: {self.info}'
+        return f'{self.__class__.__name__} | Name: {self.name} | Replicate ID: {self.replicate_id} | Info: {self.info}'
 
 
 class ModelState(TimeSeries):
@@ -345,16 +343,14 @@ class Measurement(TimeSeries):
         _mask_errors = self.mask_errors
         if _mask_errors is None:
             return self.mask_timepoints * self.mask_values
-        else:
-            return self.mask_timepoints * self.mask_values * _mask_errors
+        return self.mask_timepoints * self.mask_values * _mask_errors
 
 
     @property
     def mask_errors(self) -> numpy.ndarray:
         if self._errors is None:
             return None
-        else:
-            return ~numpy.isnan(self._errors)
+        return ~numpy.isnan(self._errors)
 
 
     @property
@@ -366,8 +362,7 @@ class Measurement(TimeSeries):
     def error_distribution(self, value:scipy.stats.rv_continuous):
         if not isinstance(value, scipy.stats.rv_continuous):
             raise ValueError('Distribution object must an instance of a subsclass of `scipy.stats.rv_continuous`')
-        else:
-            self._error_distribution = value
+        self._error_distribution = value
 
 
     @property
@@ -375,8 +370,7 @@ class Measurement(TimeSeries):
         # this is the only vector allowed to be None
         if self._errors is None:
             return None
-        else:
-            return self._errors[self.joint_mask]
+        return self._errors[self.joint_mask]
     
 
     @errors.setter
@@ -532,7 +526,7 @@ class Measurement(TimeSeries):
 
         if len(_prediction) > 1:
             raise ValueError(f'There are multiple predictions matching {self.name} and {self.replicate_id}')
-        elif len(_prediction) == 1:
+        if len(_prediction) == 1:
             prediction = _prediction[0]
         else:
             return numpy.nan

@@ -2,8 +2,9 @@ import numpy as np
 from typing import List
 import pytest
 
-import matplotlib as plt
-plt.rcParams.update({'figure.max_open_warning': 0})
+import matplotlib
+matplotlib.rcParams.update({'figure.max_open_warning': 0})
+matplotlib.use('agg')
 
 from pyfoomb.caretaker import Caretaker
 from pyfoomb.datatypes import Measurement
@@ -182,4 +183,4 @@ class TestArchipelagoHelpers():
             ]*reps,   
         }
         ArchipelagoHelpers.report_evolution_result(mock_evolution_results, report_level)
-
+        

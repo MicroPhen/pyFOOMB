@@ -170,8 +170,7 @@ class Caretaker():
     def optimizer_kwargs(self, value):
         if value is not None and not isinstance(value, dict):
             raise ValueError('Optimizer kwargs must be either `None` or a dictionary')
-        else:
-            self._optimizer_kwargs = value
+        self._optimizer_kwargs = value
 
 
     #%% Public methods
@@ -406,12 +405,12 @@ class Caretaker():
         else:
             verbosity_CVodeError = False
 
-        if report_level >= 4 and not 'disp' in _optimizer_kwargs.keys():
+        if report_level >= 4 and 'disp' not in _optimizer_kwargs.keys():
             _optimizer_kwargs['disp'] = True
 
         if use_global_optimizer:
             minimizer_scope = 'differential evolution optimizer'
-            if not 'popsize' in _optimizer_kwargs.keys():
+            if 'popsize' not in _optimizer_kwargs.keys():
                 popsize = 5*len(_unknowns)
                 _optimizer_kwargs['popsize'] = popsize
 
@@ -973,43 +972,42 @@ class Caretaker():
             )
             return pandas.DataFrame.from_dict(_estimate)
 
-        else:
-            _estimate_batches = []
-            session_id = int(time.monotonic())
-            for i in range(1, jobs_to_save+1):
+        _estimate_batches = []
+        session_id = int(time.monotonic())
+        for i in range(1, jobs_to_save+1):
 
-                curr_memory_share = psutil.virtual_memory().percent/100
-                if curr_memory_share > max_memory_share:
-                    print(f'Cannot run MC estimation job due to low memory: {(1-curr_memory_share)*100:.2f} % free memory left')
-                else:
-                    _estimate_batch = self._estimate_parallel_MC_sampling(
-                        unknowns=unknowns,
-                        measurements=measurements,
-                        bounds=bounds, 
-                        mc_samples=mc_samples, 
-                        reuse_errors_as_weights=reuse_errors_as_weights, 
-                        metric=metric, 
-                        report_level=report_level, 
-                        optimizers=optimizers, 
-                        optimizers_kwargs=optimizers_kwargs, 
-                        rel_pop_size=rel_pop_size, 
-                        evolutions=evolutions, 
-                        archipelago_kwargs=archipelago_kwargs, 
-                        atol_islands=atol_islands, 
-                        rtol_islands=rtol_islands, 
-                        n_islands=n_islands, 
-                        handle_CVodeError=handle_CVodeError, 
-                        loss_calculator=loss_calculator,
-                    )
+            curr_memory_share = psutil.virtual_memory().percent/100
+            if curr_memory_share > max_memory_share:
+                print(f'Cannot run MC estimation job due to low memory: {(1-curr_memory_share)*100:.2f} % free memory left')
+            else:
+                _estimate_batch = self._estimate_parallel_MC_sampling(
+                    unknowns=unknowns,
+                    measurements=measurements,
+                    bounds=bounds, 
+                    mc_samples=mc_samples, 
+                    reuse_errors_as_weights=reuse_errors_as_weights, 
+                    metric=metric, 
+                    report_level=report_level, 
+                    optimizers=optimizers, 
+                    optimizers_kwargs=optimizers_kwargs, 
+                    rel_pop_size=rel_pop_size, 
+                    evolutions=evolutions, 
+                    archipelago_kwargs=archipelago_kwargs, 
+                    atol_islands=atol_islands, 
+                    rtol_islands=rtol_islands, 
+                    n_islands=n_islands, 
+                    handle_CVodeError=handle_CVodeError, 
+                    loss_calculator=loss_calculator,
+                )
 
-                    _filename = f'{self.model_name}_MC-sample-estimates_session-id-{session_id}_job-{i}.xlsx'
-                    _df = pandas.DataFrame.from_dict(_estimate_batch)
-                    _estimate_batches.append(_df)
-                    _df.to_excel(_filename)
-                    if report_level > 0:
-                        print(f'Current memory usage is {psutil.virtual_memory().percent:.2f} %.\nSaved results of job #{i} to file: {_filename}\n')
+                _filename = f'{self.model_name}_MC-sample-estimates_session-id-{session_id}_job-{i}.xlsx'
+                _df = pandas.DataFrame.from_dict(_estimate_batch)
+                _estimate_batches.append(_df)
+                _df.to_excel(_filename)
+                if report_level > 0:
+                    print(f'Current memory usage is {psutil.virtual_memory().percent:.2f} %.\nSaved results of job #{i} to file: {_filename}\n')
 
-            return pandas.concat(_estimate_batches, ignore_index=True)
+        return pandas.concat(_estimate_batches, ignore_index=True)
 
 
     def _estimate_parallel_MC_sampling(self,
@@ -1560,9 +1558,9 @@ class Caretaker():
                 raise TypeError('Must provide a list of Measurement objects')
 
         # Error handling
-        if use_global_optimizer == False and not isinstance(unknowns, dict):
+        if not use_global_optimizer and not isinstance(unknowns, dict):
             raise ValueError('Must provide initial guesses when using the local optimizer')
-        if use_global_optimizer == True and bounds is None:
+        if use_global_optimizer and bounds is None:
             raise ValueError('Must provide bounds to use the global optimizer')
         if not Helpers.all_measurements_have_errors(measurements):
             raise AttributeError('Measurements cannot have no errors')
@@ -1704,7 +1702,7 @@ class Caretaker():
                 t = numpy.append(t, tfinal)
         if t.size == 0:
             raise ValueError('Must provide either measurements or tfinal')
-        elif t.size == 1:
+        if t.size == 1:
             _simulations = self.simulate(t=t, verbosity=50)
             t = Helpers.get_unique_timepoints(_simulations)
 
@@ -2317,7 +2315,7 @@ class Caretaker():
         valid_names = []
         for _parameter in self._parameter_manager._parameters:
             if _parameter.local_name not in valid_names:
-                if isinstance(_parameter.value, float) or isinstance(_parameter.value, int):
+                if isinstance(_parameter.value, (float, int)):
                     valid_names.append(_parameter.local_name)
         return valid_names
 
