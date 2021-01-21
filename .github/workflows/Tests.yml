@@ -59,8 +59,8 @@ jobs:
             conda activate build-test
             pip install -U pip pep517 twine
             python -m pep517.build . 
-            cd dist
-            pip install pyfoomb*.whl 
+            dir
+            pip install dist/pyfoomb*.whl 
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
