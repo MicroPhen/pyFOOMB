@@ -60,7 +60,9 @@ jobs:
             pip install -U pip pep517 twine
             python -m pep517.build . 
             dir
-            pip install dist/pyfoomb*.whl 
+            cd dist
+            dir
+            pip install pyfoomb*.whl 
             python -c "import pyfoomb; print(f'Can successfully import {pyfoomb.__name__} {pyfoomb.__version__}')"
             
         - name: Build wheel on Ubuntu
