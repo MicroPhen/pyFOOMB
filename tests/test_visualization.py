@@ -81,7 +81,7 @@ class TestVisualization():
             caretaker=caretaker_single,
         )
 
-    def test_compare_estimates_many_multi(self, caretaker_multi, data):
+    def test_compare_estimates_many_multi(self, caretaker_multi):
         Visualization.compare_estimates_many(
             parameter_collections={_p : [10]*3 for _p in StaticHelpers.unknowns},
             measurements=StaticHelpers.data_multi,
@@ -89,7 +89,7 @@ class TestVisualization():
             show_measurements_only=True,
         )
 
-    def test_compare_estimates_many_single(self, caretaker_single, data):
+    def test_compare_estimates_many_single(self, caretaker_single):
         Visualization.compare_estimates_many(
             parameter_collections={_p : [10]*3 for _p in StaticHelpers.unknowns},
             measurements=StaticHelpers.data_single,
