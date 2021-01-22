@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('agg')
+
 import numpy as np
 import pytest
 
@@ -78,11 +81,18 @@ class TestVisualization():
             caretaker=caretaker_single,
         )
 
-    def test_compare_estimates_many(self, caretaker_multi):
+    @pytest.mark.parametrize(
+        'caretaker, data', 
+        [
+            (caretaker_multi(), StaticHelpers.data_multi),
+            (caretaker_single(), StaticHelpers.data_single),
+        ]
+    )
+    def test_compare_estimates_many(self, caretaker, data):
         Visualization.compare_estimates_many(
             parameter_collections={_p : [10]*3 for _p in StaticHelpers.unknowns},
-            measurements=StaticHelpers.data_multi,
-            caretaker=caretaker_multi,
+            measurements=data,
+            caretaker=caretaker,
             show_measurements_only=True,
         )
 
