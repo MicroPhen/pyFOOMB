@@ -84,8 +84,8 @@ class TestVisualization():
     @pytest.mark.parametrize(
         'caretaker, data', 
         [
-            (caretaker_multi(), StaticHelpers.data_multi),
-            (caretaker_single(), StaticHelpers.data_single),
+            (caretaker_multi, StaticHelpers.data_multi),
+            (caretaker_single, StaticHelpers.data_single),
         ]
     )
     def test_compare_estimates_many(self, caretaker, data):
