@@ -98,12 +98,14 @@ class TestVisualization():
             show_measurements_only=show_measurements_only,
         )
 
+    @pytest.mark.parametrize('show_corr_coeffs', [True, False])
     @pytest.mark.parametrize('estimates', [None, {'p1': 2.5, 'p2' : 5.5}])
-    def test_show_parameter_distributions(self, estimates):
+    def test_show_parameter_distributions(self, estimates, show_corr_coeffs):
         Visualization.show_parameter_distributions(
             parameter_collections={
                 'p1' : [1, 2, 3],
                 'p2' : [4, 5, 6]
             },
             estimates=estimates,
+            show_corr_coeffs=show_corr_coeffs,
         )
