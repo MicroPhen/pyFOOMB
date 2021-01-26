@@ -1,4 +1,4 @@
-__version__ = '2.17.5-dev0'
+__version__ = '2.17.6'
 
 
 # import major classes the user will interact with
