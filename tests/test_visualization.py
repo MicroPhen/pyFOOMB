@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('agg')
+ 
 import numpy as np
 import pytest
 
@@ -78,20 +81,31 @@ class TestVisualization():
             caretaker=caretaker_single,
         )
 
-    def test_compare_estimates_many(self, caretaker_multi):
+    @pytest.mark.parametrize('show_measurements_only', [False, True])
+    @pytest.mark.parametrize(
+        'caretaker, data', 
+        [
+            ('caretaker_multi', StaticHelpers.data_multi),
+            ('caretaker_single', StaticHelpers.data_single),
+        ]
+    )
+    def test_compare_estimates_many(self, caretaker, data, show_measurements_only, request):
+        caretaker = request.getfixturevalue(caretaker)
         Visualization.compare_estimates_many(
             parameter_collections={_p : [10]*3 for _p in StaticHelpers.unknowns},
-            measurements=StaticHelpers.data_multi,
-            caretaker=caretaker_multi,
-            show_measurements_only=True,
+            measurements=data,
+            caretaker=caretaker,
+            show_measurements_only=show_measurements_only,
         )
 
+    @pytest.mark.parametrize('show_corr_coeffs', [True, False])
     @pytest.mark.parametrize('estimates', [None, {'p1': 2.5, 'p2' : 5.5}])
-    def test_show_parameter_distributions(self, estimates):
+    def test_show_parameter_distributions(self, estimates, show_corr_coeffs):
         Visualization.show_parameter_distributions(
             parameter_collections={
                 'p1' : [1, 2, 3],
                 'p2' : [4, 5, 6]
             },
             estimates=estimates,
+            show_corr_coeffs=show_corr_coeffs,
         )

@@ -94,7 +94,14 @@ class Visualization():
         else:
             raise ValueError('Argument `time_series` must be of type List[TimeSeries] or List[List[TimeSeries]]')
 
-        replicate_ids =  sorted(list(numpy.unique([[_item.replicate_id for _item in _time_series] for _time_series in multi_time_series])), key=str.lower)
+        _ids = []
+        for _time_series in multi_time_series:
+            for _item in _time_series:
+                _ids.append(_item.replicate_id)
+        replicate_ids = list(set(_ids))
+        if len(replicate_ids) > 1 and None not in replicate_ids:
+            replicate_ids = sorted(list(numpy.unique(replicate_ids)), key=str.lower)
+        
         names = sorted(list(numpy.unique([[_item.name for _item in _time_series] for _time_series in multi_time_series])), key=str.lower)
 
         # Creation of figures and axes for plotting
@@ -111,7 +118,7 @@ class Visualization():
         nrows = int(numpy.ceil(n/ncols))
         figs_axs = {
             _replicate_id : pyplot.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*5, nrows*3), dpi=dpi)
-            for _replicate_id in sorted(replicate_ids, key=str.lower)
+            for _replicate_id in replicate_ids
         }
 
         # Auto-select alpha for repeated plottings
@@ -435,7 +442,7 @@ class Visualization():
 
                 if i == j:
                 # Draw histograms for each parameter distribution
-                    seaborn.distplot(parameter_collections[par_i], color='black', ax=ax[i, j])
+                    seaborn.histplot(parameter_collections[par_i], color='black', kde=True, ax=ax[i, j])
                     ax[i, j].set_title(par_i, size=24, fontweight='bold')
                     ax[i, j].set_xlabel('Parameter value', size=16)
                     ax[i, j].set_ylabel('Frequency', size=16)
@@ -511,7 +518,7 @@ class Visualization():
                 Default is False.
             truth : List[TimeSeries]
                 List with ModelState and/or Observable objects from a simulation with "true" parameters.
-                Useful for model development, wehn one is working with synthetic noisy data.
+                Useful for model development, when one is working with synthetic noisy data.
                 Default is None.
             tight_layout : bool
                 Calls pyplot.tight_layout() for each figure. May be not wanted for manipulating return figures yourself.
@@ -543,7 +550,9 @@ class Visualization():
         parameters_splits = Helpers.split_parameters_distributions(parameter_collections)
         multi_predicitions = [caretaker.simulate(t=t, parameters=_parameters) for _parameters in parameters_splits]
 
-        replicate_ids = sorted(list(set([_measurement.replicate_id for _measurement in measurements])), key=str.lower)
+        replicate_ids = list(set([_measurement.replicate_id for _measurement in measurements]))
+        if None not in replicate_ids and len(replicate_ids) > 1:
+            replicate_ids = sorted(replicate_ids, key=str.lower)
         measurement_names = sorted(list(set([_measurement.name for _measurement in measurements])), key=str.lower)
         names = sorted(list(set([_prediction.name for _prediction in multi_predicitions[0]])), key=str.lower)
 
