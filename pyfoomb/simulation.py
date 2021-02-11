@@ -4,7 +4,6 @@ import io
 import numpy
 from typing import List
 
-
 from assimulo.solvers.sundials import CVode
 from assimulo.solvers.sundials import CVodeError
 
@@ -277,12 +276,10 @@ class Simulator():
             model_name=self._model_name,
             replicate_id=self.replicate_id,
         )
-
         if self._initial_values is not None:
             bioprocess_model.initial_values = self._initial_values
         if self._model_parameters is not None:
             bioprocess_model.model_parameters = self._model_parameters
-
         return bioprocess_model
 
 
