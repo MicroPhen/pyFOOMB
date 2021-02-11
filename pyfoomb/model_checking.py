@@ -412,17 +412,27 @@ class ModelChecker():
             
         # Call method `rhs`
         if simulator.bioprocess_model.initial_switches is not None:
-            simulator.bioprocess_model.rhs(
-                t=0, 
-                y=simulator.bioprocess_model.initial_values.to_numpy(), 
-                sw=simulator.bioprocess_model.initial_switches,
-            )
-            # Invert the switches
-            simulator.bioprocess_model.rhs(
-                t=0, 
-                y=simulator.bioprocess_model.initial_values.to_numpy(), 
-                sw=numpy.invert(simulator.bioprocess_model.initial_switches),
-            )
+            try:
+                simulator.bioprocess_model.rhs(
+                    t=0, 
+                    y=simulator.bioprocess_model.initial_values.to_numpy(), 
+                    sw=simulator.bioprocess_model.initial_switches,
+                )
+            except Exception as e:
+                check_ok = False
+                warnings.warn(f'Set `initial_switches` argument. Autodetection for number of events failed: {e}', UserWarning)
+                return check_ok
+            try:
+                # Invert the switches
+                simulator.bioprocess_model.rhs(
+                    t=0, 
+                    y=simulator.bioprocess_model.initial_values.to_numpy(), 
+                    sw=numpy.invert(simulator.bioprocess_model.initial_switches),
+                )
+            except Exception as e:
+                check_ok = False
+                warnings.warn(f'Set `initial_switches` argument. Autodetection for number of events failed: {e}', UserWarning)
+                return check_ok
         else:
             simulator.bioprocess_model.rhs(
                 t=0, 
