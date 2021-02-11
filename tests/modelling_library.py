@@ -48,7 +48,7 @@ class Model04(BioprocessModel):
 
 
 class Model05(BioprocessModel):
-    def rhs(self, t, y=None):
+    def rhs(self, t, y):
         yA, yB, yC, yD = y
         rateA, rateB, rateC, rateD, rateE = self.model_parameters.to_numpy()
         dyAdt = rateA
@@ -90,12 +90,25 @@ class Model06(BioprocessModel):
 
 
 class Model06_V02(Model06):
-    # The auto-detection of event will fail, so the user need to provided the initial switches
+    # The auto-detection of events will work on the Simulator level, so the user need to provided the initial switches
     def state_events(self, t, y, sw):
         y0, y1 = y
         event_t1 = t - 5
         event_t2 = t - 2
         event_t3 = t - 1
+        events = [event_t1, event_t2, event_t3]
+        return events
+
+class Model06_V03(Model06):
+    # The auto-detection of events will fail as the sw arg can't be None, so the user need to provided the initial switches
+    def state_events(self, t, y, sw):
+        y0, y1 = y
+        event_t1 = t - 5
+        event_t2 = t - 2
+        event_t3 = t - 1
+        sw_1 = sw[0]
+        sw_2 = sw[1]
+        sw_3 = sw[2]
         events = [event_t1, event_t2, event_t3]
         return events
 
