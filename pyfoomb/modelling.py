@@ -1,4 +1,4 @@
-﻿import abc
+import abc
 import copy
 import inspect
 import numpy
@@ -54,9 +54,8 @@ class BioprocessModel(Explicit_Problem):
         self._is_init = True
         self.replicate_id = replicate_id
         self.states = states
-        self.initial_values = {f'{state}0' : None for state in self.states}
-        self.model_parameters = {model_parameter : None for model_parameter in model_parameters} 
-        
+        self.initial_values = {f'{state}0' : numpy.nan for state in self.states}
+        self.model_parameters = {model_parameter : numpy.nan for model_parameter in model_parameters} 
 
         if initial_switches is None:
             _no_of_events = self._auto_detect_no_of_events()
