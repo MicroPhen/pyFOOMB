@@ -1,4 +1,5 @@
 import copy
+import gc
 import numpy
 from numpy.linalg import LinAlgError
 import joblib
@@ -1310,10 +1311,14 @@ class Caretaker():
                                 print(f'{_archi.mc_info}: no convergence after max. evolutions ({evo}).')
 
                     if all([_archi.finished for _archi in active_archis]):
+                        del active_archis
+                        gc.collect()
                         active_archis = []
                         break
 
                 if all([_archi.finished for _archi in active_archis]):
+                    del active_archis
+                    gc.collect()
                     active_archis = []
                     break
 
