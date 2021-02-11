@@ -40,8 +40,10 @@ class TestCheckBioprocessModel():
         [
             (modelling_library.Model06, None, 'pass'),    
             (modelling_library.Model06_V02, [False]*4, 'UserWarning'),
-            (modelling_library.Model06_Bad01, None, 'NameError'),
-            (modelling_library.Model06_Bad02, None, 'NameError'),
+            (modelling_library.Model06_V02, None, 'pass'),
+            (modelling_library.Model06_V03, None, 'UserWarning'),
+            (modelling_library.Model06_Bad01, None, 'UserWarning'),
+            (modelling_library.Model06_Bad02, None, 'UserWarning'),
             (modelling_library.Model06_Bad03, None, 'NameError'),
             (modelling_library.Model06_Bad04, None, 'NameError'),
             (modelling_library.Model06_Bad05, [False]*3, 'UserWarning'),
