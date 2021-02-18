@@ -10,6 +10,7 @@ from pyfoomb import ParameterMapper
 from pyfoomb.datatypes import Sensitivity
 from pyfoomb.caretaker import Caretaker
 
+import modelling_library
 from modelling_library import ModelLibrary
 
 
@@ -91,6 +92,36 @@ class TestBaseFunctionalities():
         # But the replicate_ids must match
         with pytest.raises(KeyError):
             caretaker02.add_replicate(replicate_id='4th', mappings=[mapping])
+
+    @pytest.mark.parametrize(
+        'model_name, model_class, correct_initial_switches, autodetect_ok',
+        [
+            ('model03', modelling_library.Model03, [False], True),
+            ('model06', modelling_library.Model06, [False]*2, True),
+            ('model06', modelling_library.Model06_V02, [False]*3, True),
+            ('model06', modelling_library.Model06_V03, [False]*3, False),
+        ]
+    )
+    def test_autodetection_of_initial_switches(self, model_name, model_class, correct_initial_switches, autodetect_ok):
+        model_parameters = ModelLibrary.model_parameters[model_name]
+        initial_values = ModelLibrary.initial_values[model_name]
+        initial_switches = ModelLibrary.initial_switches[model_name]
+        rid = 'Test_id'
+
+        if not autodetect_ok:
+            with pytest.warns(UserWarning):
+                Caretaker(bioprocess_model_class=model_class, model_parameters=model_parameters, initial_values=initial_values, replicate_ids=[rid])
+            caretaker = Caretaker(
+                bioprocess_model_class=model_class, 
+                model_parameters=model_parameters, 
+                initial_values=initial_values, 
+                initial_switches=correct_initial_switches,
+                replicate_ids=[rid],
+            )
+        else:
+            caretaker = Caretaker(bioprocess_model_class=model_class, model_parameters=model_parameters, initial_values=initial_values, replicate_ids=[rid])
+        for actual, expected in zip(caretaker.simulators[rid].bioprocess_model.initial_switches, correct_initial_switches):
+                assert actual == expected
 
     def test_properties(self, caretaker_multi):
         # Get the current parameter mapping

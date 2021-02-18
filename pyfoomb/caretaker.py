@@ -1,4 +1,5 @@
 import copy
+import gc
 import numpy
 from numpy.linalg import LinAlgError
 import joblib
@@ -1310,10 +1311,14 @@ class Caretaker():
                                 print(f'{_archi.mc_info}: no convergence after max. evolutions ({evo}).')
 
                     if all([_archi.finished for _archi in active_archis]):
+                        del active_archis
+                        gc.collect()
                         active_archis = []
                         break
 
                 if all([_archi.finished for _archi in active_archis]):
+                    del active_archis
+                    gc.collect()
                     active_archis = []
                     break
 
@@ -1619,7 +1624,7 @@ class Caretaker():
     def get_sensitivities(self,
                           measurements:List[Measurement]=None, responses:list='all', parameters:list=None,
                           tfinal:float=None, abs_h:float=None, rel_h:float=1e-3, 
-                          parallel_verbosity:int=1, handle_CVodeError:bool=True, verbosity_CVodeError:bool=False,
+                          handle_CVodeError:bool=True, verbosity_CVodeError:bool=False,
                           ) -> List[Sensitivity]:
 
         """
@@ -1648,9 +1653,6 @@ class Caretaker():
                 Relative pertubation for central difference quotient. Overrides use of abs_h. 
                 Absolute perturbation for each parametric sensitivity is then calculated according to: abs_h = rel_h * max(1, |p|). 
                 Default is 1e-3.
-            parallel_verbosity : int
-                Control output level of the parallel job work, default is 0. 
-                See joblib documentation for futher details.
             handle_CVodeError : bool
                 Catches CVodeError raised by the solver, in order to not interrupt the estimations for toxic parameter values. 
                 Default is True.
@@ -1723,7 +1725,7 @@ class Caretaker():
 
         sensitivities = []
         for _id in self.replicate_ids:
-            sensitivities.extend(self._get_sensitivities_parallel(_id, parameters, rel_h, abs_h, t, parallel_verbosity, responses))
+            sensitivities.extend(self._get_sensitivities_parallel(_id, parameters, rel_h, abs_h, t, responses))
         return sensitivities
 
 
@@ -1852,7 +1854,6 @@ class Caretaker():
             sensitivities = self.get_sensitivities(
                 measurements=measurements, 
                 parameters=estimates, 
-                parallel_verbosity=0,
                 handle_CVodeError=handle_CVodeError, 
                 verbosity_CVodeError=verbosity_CVodeError,
             )
@@ -2066,7 +2067,7 @@ class Caretaker():
 
     #%% Private methods
 
-    def _get_sensitivities_parallel(self, replicate_id:str, parameters:list, rel_h:float, abs_h:float, t:numpy.ndarray, parallel_verbosity:int, responses:list) -> List[Sensitivity]:
+    def _get_sensitivities_parallel(self, replicate_id:str, parameters:list, rel_h:float, abs_h:float, t:numpy.ndarray, responses:list) -> List[Sensitivity]:
         """
         Calculates sensitivities in parallel for a specific replicate_id.
         
@@ -2082,8 +2083,6 @@ class Caretaker():
                 The absolute central difference perturbation value.
             t : numpy.ndarray
                 The timepoints at which the sensitivities are to be calculated.
-            parallel_verbosity : int
-                Controls verbosity for the parallelization process.
             responses : list
                 The model states and/or observations for which the sensitivities are to be calculated.
 
@@ -2120,7 +2119,7 @@ class Caretaker():
             n_jobs = n_cpus
 
         with joblib.parallel_backend('loky', n_jobs=n_jobs):
-            sensitivities = joblib.Parallel(verbose=parallel_verbosity)(map(joblib.delayed(self._d_response_i_wrt_d_parameter_j_central_difference), arg_instances))
+            sensitivities = joblib.Parallel(verbose=0)(map(joblib.delayed(self._d_response_i_wrt_d_parameter_j_central_difference), arg_instances))
 
         return list(sensitivities)
 

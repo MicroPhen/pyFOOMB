@@ -3,6 +3,7 @@ import copy
 import inspect
 import numpy
 from typing import List
+import warnings
 
 from assimulo.problem import Explicit_Problem
 from assimulo.solvers.sundials import CVode
@@ -54,16 +55,19 @@ class BioprocessModel(Explicit_Problem):
         self._is_init = True
         self.replicate_id = replicate_id
         self.states = states
-        self.initial_values = {f'{state}0' : None for state in self.states}
-        self.model_parameters = {model_parameter : None for model_parameter in model_parameters} 
-        
+        self.initial_values = {f'{state}0' : numpy.nan for state in self.states}
+        self.model_parameters = {model_parameter : numpy.nan for model_parameter in model_parameters} 
 
         if initial_switches is None:
-            _no_of_events = self._auto_detect_no_of_events()
+            try:
+                _no_of_events = len(self.state_events(t=0, y=self.initial_values.to_numpy(), sw=None))
+            except Exception as e:
+                print(f'Falling back to detect number of events: {e}')
+                _no_of_events = self._auto_detect_no_of_events()
+                print(f'Detected {_no_of_events} events')
             self.initial_switches = [False] * _no_of_events
         else:
             self.initial_switches = initial_switches
-            _no_of_events = len(initial_switches)
 
         if model_name is not None:
             self._name = model_name
@@ -318,7 +322,7 @@ class BioprocessModel(Explicit_Problem):
         all_in_one = ''.join(_lines[0]).replace('\n', '').replace(' ', '').replace('\\', '')
         after_return = all_in_one.split('return')[-1]
 
-        if '[]' in after_return: # there are no events
+        if '[]' in after_return: # there are no detectable events
             no_of_events = 0
         else:
             # detect automatically the number of returned events by the number of commas

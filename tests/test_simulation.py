@@ -1,5 +1,6 @@
 
 import numpy as np
+import warnings
 
 from assimulo.solvers.sundials import CVodeError
 
@@ -12,6 +13,7 @@ from pyfoomb.simulation import Simulator
 from pyfoomb.simulation import ExtendedSimulator
 from pyfoomb.simulation import ModelObserver
 
+import modelling_library
 from modelling_library import ModelLibrary
 from modelling_library import ObservationFunctionLibrary
 
@@ -40,9 +42,15 @@ class TestSimulator():
         states = ModelLibrary.states[name]
         initial_values = ModelLibrary.initial_values[name]
         model_parameters = ModelLibrary.model_parameters[name]
-        # These init will work
-        Simulator(bioprocess_model_class=modelclass, model_parameters=model_parameters, initial_values=initial_values)
+        initial_switches = ModelLibrary.initial_switches[name]
+        # These inits will work
         Simulator(bioprocess_model_class=modelclass, model_parameters=model_parameters, states=states)
+        simulator = Simulator(bioprocess_model_class=modelclass, model_parameters=model_parameters, initial_values=initial_values)
+        # Check correct autodetection of initial switches
+        if initial_switches is not None:
+            for _actual, _expected in zip(simulator.bioprocess_model.initial_switches, initial_switches):
+                assert _actual == _expected
+
         # Can also provide the model parameters as list
         Simulator(bioprocess_model_class=modelclass, model_parameters=list(model_parameters.keys()), initial_values=initial_values)
         # The model parameter cannot be of other types that list or dict
@@ -51,7 +59,7 @@ class TestSimulator():
         # Must provide at least either states list of initial values dict
         with pytest.raises(ValueError):
             Simulator(bioprocess_model_class=modelclass, model_parameters=model_parameters)
-        
+
     @pytest.mark.parametrize('t', [24, [0, 1, 2, 3]])
     def test_simulate(self, simulator, t):
         simulator.simulate(t=t)
@@ -181,8 +189,6 @@ class TestExtendedSimulator():
                     verbosity_CVodeError=True,
                 )
             )
-
-
 
     def test_extended_simulator_with_observations(self):
         # Get building blocks for BioprocessModel
